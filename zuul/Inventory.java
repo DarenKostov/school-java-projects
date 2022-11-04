@@ -13,7 +13,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * 10/12/2022
+ * 11/04/2022
  */
 
 
@@ -76,6 +76,7 @@ public class Inventory {
 	
 	
 	//returns weather there is enough space for an item in general
+	//works, dont change
 	public boolean enoughSpace(String name, int amount) {
 		
 		if(hasItem(name))//item exists?
@@ -96,7 +97,7 @@ public class Inventory {
 	
 	
 	
-	
+	//return all items with their amounts in a string form
 	public String getItemsWithAmounts() {
 		String returnString="";
 		

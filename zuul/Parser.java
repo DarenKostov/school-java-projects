@@ -17,6 +17,9 @@ import java.util.StringTokenizer;
  * 
  * @author  Michael Kolling and David J. Barnes
  * @version 1.0 (February 2002)
+ *
+ * Later modified by Daren Kostov
+ * 11/04/2022
  */
 
 class Parser 
@@ -35,14 +38,12 @@ class Parser
         String word1;
         String word2;
         String word3;
-
         String Time="";
         
         
-
+        //calc time
         Time+=(int)Math.floor(time/32)%32;
         Time+=":";
-        
         Time+=time%32;
         
         

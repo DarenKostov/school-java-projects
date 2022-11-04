@@ -7,6 +7,9 @@
  *
  * @author  Michael Kolling and David J. Barnes
  * @version 1.0 (February 2002)
+ *
+ * Later modified by Daren Kostov
+ * 11/04/2022
  */
 
 class CommandWords
@@ -54,7 +57,7 @@ class CommandWords
         return false;
     }
 
-    //returns the main command of an alias, returns null if the command doesnt exist
+    //returns the main command of an alias, returns null if the command or alias don't exist
     public String Simplify(String str) {
     	
     	if(str==null)

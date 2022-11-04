@@ -14,6 +14,9 @@ import java.util.Iterator;
  * 
  * @author  Michael Kolling and David J. Barnes
  * @version 1.0 (February 2002)
+ *
+ * Later modified by Daren Kostov
+ * 11/04/2022
  */
 
 class Room 
@@ -89,7 +92,7 @@ class Room
     		return false;
     	
     }
-    
+    //returns the marking of the room
     public int GetMarking() {
     	return marking;
     }
@@ -131,7 +134,7 @@ class Room
         return returnString.substring(0, Math.max(0,returnString.length() - 2));
     }
 
-    
+    //get all of the items in a single string
     private String getItemsString()
     {
         String returnString = "Items:\n";
