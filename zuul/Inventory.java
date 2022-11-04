@@ -35,7 +35,7 @@ public class Inventory {
 		if(items.get(name)==null)
 			items.put(name, 1);
 		else {
-			if(items.get(name)<maxNumOfItems)
+			if(enoughSpace(name))
 				items.put(name, items.get(name)+1);
 		}
 
@@ -54,22 +54,47 @@ public class Inventory {
 		return items.get(name);
 	}
 	
-	//returns weather there is enough space for an item
-	public boolean enoughSpace(String name) {
-		if(items.get(name)!=null)
-			return items.get(name)<maxNumOfItems;
-		return true;
-	}
-	
+
 	//returns weather there is enough space for a new an item
 	public boolean enoughSpaceForNew() {
 		return items.size()<maxUniqueItems;
 	}
 	
+	
+	
+	
 	//returns weather the item is in the inventory
 	public boolean hasItem(String name) {
 		return items.get(name)!=null;
 	}
+	
+	//returns weather there are at least X items in the inventory
+	public boolean hasItems(String name, int amount) {
+		return getItemamount(name)-amount>=0;
+	}
+	
+	
+	
+	//returns weather there is enough space for an item in general
+	public boolean enoughSpace(String name, int amount) {
+		
+		if(hasItem(name))//item exists?
+			return items.get(name)+amount<=maxNumOfItems;//slot capacity is capped out?
+		
+		else//item doesn't exist?
+			if(enoughSpaceForNew())//free slots are available?
+				return amount<=maxNumOfItems;//slot capacity is capped out?
+			
+		return false;//none of the above?
+	}
+	
+	public boolean enoughSpace(String name) {
+		return enoughSpace(name, 1);
+	}
+	
+	
+	
+	
 	
 	
 	public String getItemsWithAmounts() {

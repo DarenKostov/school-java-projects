@@ -19,11 +19,11 @@ import java.util.Iterator;
 class Room 
 {
     private String description;
-    private HashMap exits;        // stores exits of this room.
+    private HashMap<String, Room> exits;        // stores exits of this room.
     private final int maxNumOfItems=4;
     private Inventory inventory= new Inventory(3,maxNumOfItems);  //stores a local inventory to the room
     private int darkness=0; //how dark is the room
-    
+    private int marking=0;
     
     /**
      * Create a room described "description". Initially, it has no exits.
@@ -33,7 +33,7 @@ class Room
     public Room(String description) 
     {
         this.description = description;
-        exits = new HashMap();
+        exits = new HashMap<String, Room>();
     }
 
     /**
@@ -52,25 +52,14 @@ class Room
     
     //adds items to the inventory
     public void addItems(String name, int amount) {
-    	for(int i=0; i<amount; i++) {
-    		if(inventory.enoughSpace(name))
-    			inventory.addItem(name);
-    		else {
-                System.out.println("There is not enough space for this item in the room.");
-                break;
-    			
-    		}    			
-    	}
+		for(int i=0; i<amount; i++)
+			inventory.addItem(name);
     }
     
     
     //returns weather there is enough space in the room for a particular item
-    public boolean enoughRoomForItem(String name, int amount) {
-    	if(inventory.enoughSpaceForNew() || inventory.enoughSpace(name))
-    		if(inventory.getItemamount(name)+amount<=maxNumOfItems)
-    	    	return true;
-
-    		return false;
+    public boolean enoughSpace(String name, int amount) {
+    	return inventory.enoughSpace(name, amount);
     }
    
     
@@ -83,11 +72,27 @@ class Room
     }
     
     
-    //adds items to the inventory
+    //returns weather the item exists in the inv
     public boolean hasItem(String name) {
     	return inventory.hasItem(name);
     }
     
+    
+    
+    
+    //set the mark if its not marked already
+    public boolean SetMarking(int n) {
+    	if(marking==0) {
+    		marking=n;
+    		return true;
+    	}else
+    		return false;
+    	
+    }
+    
+    public int GetMarking() {
+    	return marking;
+    }
     
     /**
      * Return the description of the room (the one that was defined in the
@@ -105,7 +110,11 @@ class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + "\n" + getExitString()+"\n"+getItemsString();
+    	if(marking==0)
+    		return "You are " + description + "\n" + getExitString() + "\n" + getItemsString();
+    	else
+            return "You are " + description + "\nThe room is marked with the Number: " + marking + "\n" + getExitString() + "\n" + getItemsString();
+
     }
 
     /**

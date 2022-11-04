@@ -18,14 +18,14 @@ import java.util.List;
  * @version 1.0 (February 2002)
  * 
  * Later modified by Daren Kostov
- * 10/10/2022
+ * 11/04/2022
  * Modifications inspired by the backrooms series, specifically level 0, but the original does not have items at level 0
  * http://backrooms-wiki.wikidot.com/level-0
  * 
  * 
  * Recources used:
  * https://www.w3schools.com/java/ref_string_charat.asp
- * 
+ * https://stackoverflow.com/questions/997482/does-java-support-default-parameter-values
  */
 
 class Game 
@@ -39,7 +39,7 @@ class Game
 	int sanity=100;
 	int danger=0;
 	int time=(int)(Math.random()*1024);
-    Inventory myInventory=new Inventory(3, 20);
+    Inventory myInventory=new Inventory(3, 2);
     int markingNumber=1;
     /** 
      * Create the game and initialise its internal map.
@@ -68,56 +68,6 @@ class Game
 
 
     	myInventory.addItem("almond-water");
-
-    	myInventory.addItem("q");
-    	myInventory.addItem("q");
-
-    	myInventory.addItem("q");
-
-    	myInventory.addItem("h");
-    	myInventory.addItem("h");
-    	myInventory.addItem("h");
-    	myInventory.addItem("h");
-    	myInventory.addItem("h");
-    	myInventory.addItem("h");
-    	myInventory.addItem("h");
-
-    	myInventory.addItem("q");
-    	myInventory.addItem("q");
-    	myInventory.addItem("q");
-
-    	
-    	myInventory.addItem("a");
-    	myInventory.addItem("a");
-    	myInventory.addItem("a");
-    	myInventory.addItem("a");
-    	myInventory.addItem("a");
-    	myInventory.addItem("a");
-    	myInventory.addItem("a");
-    	myInventory.addItem("a");
-
-    	myInventory.addItem("c");
-    	myInventory.addItem("c");
-    	myInventory.addItem("c");
-    	myInventory.addItem("c");
-    	myInventory.addItem("c");
-    	myInventory.addItem("c");
-    	myInventory.addItem("c");
-    	myInventory.addItem("c");
-    	myInventory.addItem("p");
-    	myInventory.addItem("p");
-    	myInventory.addItem("p");
-    	myInventory.addItem("p");
-    	myInventory.addItem("p");
-    	myInventory.addItem("p");
-    	myInventory.addItem("p");
-    	myInventory.addItem("p");
-
-    	myInventory.addItem("q");
-    	myInventory.addItem("q");
-    	myInventory.addItem("q");
-    	myInventory.addItem("q");
-    	myInventory.addItem("q");
 
         //all possible names for level 0 rooms
         String[] level0Names={"in a very large room.", "in a big room.", "in a small room.", "in a very small room.", "in a familiar room?", "in a peculiar room.", "in a medium sized room.",
@@ -232,6 +182,7 @@ class Game
 
         
         currentRoom = level0[0];  //starting point
+               
         
         //game starts with danger
         danger+=currentRoom.getDarkness()*30;
@@ -251,6 +202,10 @@ class Game
         while (! finished) {
             Command command = parser.getCommand(time, sanity, danger);
             finished = processCommand(command);
+            
+            if(isDead()) {
+            	break;
+            }
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -272,6 +227,22 @@ class Game
         printRoomInfo();
     }
 
+    
+    //returns weather the player is dead
+    private boolean isDead() {
+    	if(sanity<=0) {
+    		System.out.println("Died due to low sanity levels");
+    		return true;
+    	}
+    	if(danger>=100) {
+    		System.out.println("You died! You should stay out of dark rooms!");
+    		return true;
+    	}
+    	return false;
+    }
+    
+    
+    
     /**
      * Given a command, process (that is: execute) the command.
      * If this command ends the game, true is returned, otherwise false is
@@ -307,6 +278,10 @@ class Game
         	printRoomInfo();
          	incTime();
         }
+        else if (commandWord.equals("win")) {
+            wantToQuit = quit(command);
+            System.out.println("You win.");
+        }
         else if (commandWord.equals("quit")) 
             wantToQuit = quit(command);
         
@@ -327,38 +302,52 @@ class Game
 	
 	String item=command.getSecondWord();
 	if(!myInventory.hasItem(item)) 
-        System.out.println("You don;t have such item.");
+        System.out.println("You don't have such item.");
 	else {
 		
 
 		switch(item) {
-		
+		//increases sanity
 		case "almond-water":
-			sanity-=20;
+			changeSanity(20);
 			myInventory.removeItem(item);
 			System.out.println("You drank 1 bottle of almond water");
 			break;
 			
+		//marks a room
 		case "marker":
-			//currentRoom.SetMarking(markingNumber);
-			//System.out.print("You marked this room with the number "+currentRoom.GetMarking(markingNumber++));
-
-			if(Math.random()<0.5f) {
-				myInventory.removeItem(item);
-				System.out.println(" but you used up the marker.");
-
-			}else
-				System.out.println(" and you didn't use up the marker.");
+			if(currentRoom.GetMarking()==0) {
+				currentRoom.SetMarking(markingNumber++);
+				System.out.print("You marked this room with the number "+currentRoom.GetMarking());
+	
+				if(Math.random()<0.3f) {
+					myInventory.removeItem(item);
+					System.out.println(", but you used up the marker.");
+	
+				}else
+					System.out.println(" and you didn't use up the marker.");
+			}else{
+				System.out.println("You already marked this room.");
+				//return to evade the incTime() at the end, since the action was unsuccessful
+				return;
+			}
 			break;
+			
+		//does nothing
 		case "bandages":
 			System.out.println("You don't have any injuries.");
 			break;
 			
+		//does nothing
 		case "axe":
-			System.out.println("On what will you use this, there are no trees, and it would look bad if you messed up the walls.");
+			System.out.println("On what will you use this, there are no trees, and I wouldn't wanna ruin the walls of this \"building\".");
 			break;
+			
+		//decreases sanity
 		case "compass":
 			System.out.println("The compass is spinning in random direcions... is north really north?");
+			System.out.println("What about West?... South and East...?");
+			changeSanity(-10);
 			break;			
 		default:
 			System.out.println("How did you get this item???");
@@ -386,11 +375,21 @@ class Game
         System.out.println("Args: {arguments}");
         parser.showCommands();
         System.out.println("When a command has a \"$\" at the beginning of its description it means it increases the time upon executing it successfully.\n\n\n");
-        System.out.println("       sanit");
-        System.out.println("time     |     danger");
-       System.out.println("  \\      |      /");
-        System.out.println("   v     v     v");
-      //System.out.println("(00:00)[100%]{0%}>");
+
+        //alignment
+        if(time%32>9){
+            System.out.println("       sanity");
+            System.out.println("time     |    danger");
+           System.out.println("  \\      |     /");
+            System.out.println("   v     v    v");
+          //System.out.println("(00:00)[100%]{0%}>");
+        }else{
+            System.out.println("      sanity");
+            System.out.println("time    |    danger");
+           System.out.println(" \\      |     /");
+            System.out.println("  v     v    v");
+          //System.out.println("(00:0)[100%]{0%}>");
+        }        
         
         
     }
@@ -414,13 +413,15 @@ class Game
     	
     	String item=command.getSecondWord();
     	
+    	//sets amount to 1 if its not listed in the command
     	int amount=isInt(command.getThirdWord())? Integer.parseInt(command.getThirdWord()) : 1;
+    	
     	
     	if(!myInventory.hasItem(item)) 
             System.out.println("You don't have such item.");
-    	else if(myInventory.getItemamount(item)<amount)
+    	else if(!myInventory.hasItems(item, amount))
             System.out.println("You don't have that much of this item");
-    	else if(!currentRoom.enoughRoomForItem(item, amount))
+    	else if(!currentRoom.enoughSpace(item, amount))
 			System.out.println("There isn't enough room in this room for this item.");    	
     	else {
     		for(int i = 0; i<amount; i++) 
@@ -447,8 +448,8 @@ class Game
     	String item=command.getSecondWord();
     	if(!currentRoom.hasItem(item)) 
             System.out.println("There is no such item in this room.");
-    	else if(!(myInventory.enoughSpace(item) || myInventory.enoughSpaceForNew()))
-            System.out.println("There is not enough space in your inventory for more items.");
+    	else if(!myInventory.enoughSpace(item))
+            System.out.println("There is not enough space in your inventory for this item.");
     	else {
     		myInventory.addItem(item);
     		currentRoom.removeItems(item, 1);
@@ -487,7 +488,7 @@ class Game
             //resets danger because we moved
             danger=0;    
         	//moving decreases sanity
-        	sanity-=5;
+            changeSanity(-5);
 
         	incTime();
         	
@@ -515,7 +516,7 @@ class Game
     	int i=0;
     	//System.out.println(++i+"; ");
     	System.out.println("This game includes:");
-    	System.out.println(++i+"; command alias system (commands can have aliaces like 'help' and 'h')");
+    	System.out.println(++i+"; command alias system (commands can have aliases like 'help' and 'h')");
     	System.out.println(++i+"; command argument system (commands can have multiple arguments)");
     	System.out.println(++i+"; inventory system (class that stores items)");
     	System.out.println(++i+"; inventory management system (add/remove items)");
@@ -529,6 +530,8 @@ class Game
     	System.out.println(++i+"; two rooms will lead to eachother (a room will lead to a room that leads to it)");
     	System.out.println(++i+"; item usage system (items can be taken, droped, used and stored)");
     	System.out.println(++i+"; danger and sanity system (if one is too high or the other is too low it's game over)");
+    	System.out.println(++i+"; ability to mark rooms so you can keep track of them");
+
     	System.out.println(++i+"; no win condition");
     }
     	
@@ -561,7 +564,12 @@ class Game
     private void incTime() {
         danger+=currentRoom.getDarkness()*30;
         time++;
-        sanity--;
+        changeSanity(-1);
+    }
+    
+    public void changeSanity(int n) {
+    	sanity=Math.max(0, Math.min(100, sanity+n));
+    	
     }
     
     
