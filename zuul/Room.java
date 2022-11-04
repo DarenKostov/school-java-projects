@@ -109,7 +109,7 @@ class Room
     /**
      * Return a long description of this room, in the form:
      *     You are in the kitchen.
-     *     Exits: north westi
+     *     Exits: north west
      *     This room is marked with the number: 5
      */    
     public String getLongDescription()
