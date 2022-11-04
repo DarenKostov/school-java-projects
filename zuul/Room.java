@@ -109,14 +109,15 @@ class Room
     /**
      * Return a long description of this room, in the form:
      *     You are in the kitchen.
-     *     Exits: north west
-     */
+     *     Exits: north westi
+     *     This room is marked with the number: 5
+     */    
     public String getLongDescription()
     {
     	if(marking==0)
     		return "You are " + description + "\n" + getExitString() + "\n" + getItemsString();
     	else
-            return "You are " + description + "\nThe room is marked with the Number: " + marking + "\n" + getExitString() + "\n" + getItemsString();
+            return "You are " + description + "\nThe room is marked with the number: " + marking + "\n" + getExitString() + "\n" + getItemsString();
 
     }
 

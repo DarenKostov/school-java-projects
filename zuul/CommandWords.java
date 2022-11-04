@@ -62,7 +62,7 @@ class CommandWords
     
     
     /*
-     * Print all valid commands to System.out.
+     * prints info+description of each command
      */
     public void showAll() 
     {

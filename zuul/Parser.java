@@ -80,11 +80,7 @@ class Parser
         
         // note: we just ignore the rest of the input line.
 
-        // Now check whether this word is known. If so, create a command
-        // with it. If not, create a "null" command (for unknown command).
-
-        
-
+        //returns the "de-aliased" command
         return new Command(commands.Simplify(word1), word2, word3);
         
     }
