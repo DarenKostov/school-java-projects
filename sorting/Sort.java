@@ -13,12 +13,28 @@
 
 
 
-public static class Sort{
+public class Sort{
     
     
     //bubble sort
     public static void Bubble(int[] in){
-    
+	
+		for(int i=0; i<in.length-1; i++){//loop through the data
+			
+			if(in[i]>in[i+1]){//flip the numbers
+				int temp= in[i+1];
+				in[i+1]=in[i];
+				in[i]=temp;
+			}else
+				continue;
+			
+			
+			
+		}
+		
+			
+
+	
     }
     
     //selection sort
