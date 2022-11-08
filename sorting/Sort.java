@@ -18,16 +18,22 @@ public class Sort{
     
     //bubble sort
     public static void Bubble(int[] in){
-	
-		for(int i=0; i<in.length-1; i++){//loop through the data
+		
+		int end=1;
+		
+		while(end>0){
+			end=in.length-1;
+			for(int i=0; i<in.length-1; i++){//loop through the data
 			
-			if(in[i]>in[i+1]){//flip the numbers
-				int temp= in[i+1];
-				in[i+1]=in[i];
-				in[i]=temp;
-			}else
-				continue;
-			
+				if(in[i]>in[i+1]){//flip the numbers
+					int temp= in[i+1];
+					in[i+1]=in[i];
+					in[i]=temp;
+				}else{
+					end--;
+					continue;
+				}
+			}
 			
 			
 		}
