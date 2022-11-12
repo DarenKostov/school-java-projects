@@ -49,10 +49,10 @@ public class Sort{
     //selection sort
     public static int[] Selection(int[] in){
     	//find next biggest number and flip it with the current one
-		for(int i=0; i<in.length-1; i++){
+		for(int i=0; i<in.length; i++){
 			int forMoving=i;
-			for(int j=i; j<in.length-1; j++){
-				if(in[forMoving]<in[j])
+			for(int j=i; j<in.length; j++){
+				if(in[forMoving]>in[j])
 					forMoving=j;
 			}
 			int temp= in[forMoving];
