@@ -23,7 +23,9 @@ public class Main {
 	
 	
 	private Main(){
-	
+		
+		Scanner scanner = new Scanner(System.in);
+		
 		filePath="./data.txt";
 		
 		try{
@@ -46,18 +48,25 @@ public class Main {
 		}
 		
 		
-		long time1, time2;
+		long time1=0, time2=0;
 		
-		time1=System.currentTimeMillis();
-
-		Sort.Bubble(input);
 		
+		switch(Integer.parseInt(scanner.nextLine())){
+			case 1:
+				time1=System.currentTimeMillis();
+				Sort.Bubble(input);
+				time2=System.currentTimeMillis();
+				break;
+			case 2:	
+				time1=System.currentTimeMillis();
+				Sort.Selection(input);
+				time2=System.currentTimeMillis();
+				break;
+		}
 
-		time2=System.currentTimeMillis();
 
 
-
-		System.out.println(time2-time1+"; "+time1+", "+time2);
+		System.out.println("time: "+(time2-time1));
 		
 		
 	}

@@ -45,7 +45,20 @@ public class Sort{
     
     //selection sort
     public static void Selection(int[] in){
-    
+    	
+		for(int i=0; i<in.length-1; i++){
+			int forMoving=i;
+			for(int j=i; j<in.length-1; j++){
+				if(in[forMoving]<in[j])
+					forMoving=j;
+			}
+			int temp= in[forMoving];
+			in[forMoving]=in[i];
+			in[i]=temp;
+		}
+		
+		
+		
     }
     
     //table sort
