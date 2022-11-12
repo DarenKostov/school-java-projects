@@ -2,10 +2,12 @@
 	Daren Kotsov
     
     class containgin several sorting algorithms
-    none of the function return anything
+    none of the function return anything, they exist purely for timing purposes
     
-	11/04/2022
+	11/12/2022
 	
+	resources used:
+	https://www.geeksforgeeks.org/quick-sort/
 	
  */
 
@@ -83,9 +85,49 @@ public class Sort{
     }
     
     //quicksort sort
-    public static void Quicksort(int[] in){
-    
-    }
+    public static int[] Quicksort(int[] in, int low, int high){
+    	if(low>=high || low<0)
+			return in;
+			
+			
+		//PARTITIONING
+		
+		// value of the right most element (of this partition)
+	    int pivot=in[high];  
 
+		//index of smaller element
+	    int indexL=low-1;
+		
+		
+	    for (int i=low; i<high; i++){
+
+			//if the given element is smaller than the pivot swap it with indexL (incremeting indexL before hand)
+	        if (in[i]<pivot){
+				int temp=in[i];
+				in[i]=in[++indexL];
+				in[indexL]=temp;
+	        }
+	    }
+		//swap the right most value with indexL
+		int temp=in[high];
+		in[high]=in[++indexL];
+		in[indexL]=temp;
+		
+	    //partitioning index 
+		int indexP=indexL;
+		
+		
+		//partition the input into 2, and repeat
+		in=Quicksort(in, low, indexP-1);
+		in=Quicksort(in, indexP+1, high);
+		
+		return in;
+		
+		
+    }
+	
+    public static int[] Quicksort(int[] in){
+		return Quicksort(in, 0, in.length-1);
+	}
 
 }
