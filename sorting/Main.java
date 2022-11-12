@@ -34,20 +34,20 @@ public class Main {
 		
 		System.out.println("\nFirst input a file with all the data that is to be sorted.");
 
-		System.out.println("Files that should be initially in the original repository of this project.");
+		System.out.println("Files that should be initially in the original repository of this project:");
 		System.out.println("data-50.txt");
 		System.out.println("data-100.txt");
 		System.out.println("data-1k.txt");
 		System.out.println("data-10k.txt");
 		System.out.println("data-100k.txt");
-		System.out.println("data-1mil.txt");
+		System.out.println("data-1mil.txt\n");
 		
 		System.out.print("Input file path: ");
 		
 		
 
 		filePath=scanner.nextLine();
-		if(filePath.equals("q"))
+		if(filePath.equals("~"))
 			filePath="./data-50.txt";
 		
 		try{
@@ -126,7 +126,7 @@ public class Main {
 		
 		System.out.println("Next, input a soritng algorithm.");
 		System.out.println("Sorting algorithms:\n1: Bubble\n2: Selection\n3: Table\n4: Quicksort");
-		System.out.print("Input a sorting algorithm: ");
+		System.out.print("\nInput a sorting algorithm: ");
 		
 		try{
 			switch(Integer.parseInt(scanner.nextLine())){
@@ -167,11 +167,14 @@ public class Main {
 		
 		int mili=time%1000;
 		int sec=(time-mili)/1000;
-		int min=sec/60;
+		int min=sec/60; //minutes are for the 1mil file and sorting/bubble algorithms
 		sec=sec%60;
 		
 		
-		System.out.printf("\n\ntime: %d:%d.%d\n", min, sec, mili);
+		System.out.printf("\n\ntime: %d:%d.%04d", min, sec, mili);
+		
+		
+		
 		
 	}
 
