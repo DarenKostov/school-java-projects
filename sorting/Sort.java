@@ -2,8 +2,9 @@
 	Daren Kotsov
     
     class containgin several sorting algorithms
-    none of the function return anything, they exist purely for timing purposes
-    
+	functions return a new, sorted, array
+		
+			    
 	11/12/2022
 	
 	resources used:
@@ -19,7 +20,7 @@ public class Sort{
     
     
     //bubble sort
-    public static void Bubble(int[] in){
+    public static int[] Bubble(int[] in){
 		
 		int end=1;
 		
@@ -40,13 +41,13 @@ public class Sort{
 			
 		}
 		
-			
+		return in;
 
 	
     }
     
     //selection sort
-    public static void Selection(int[] in){
+    public static int[] Selection(int[] in){
     	//find next biggest number and flip it with the current one
 		for(int i=0; i<in.length-1; i++){
 			int forMoving=i;
@@ -59,12 +60,12 @@ public class Sort{
 			in[i]=temp;
 		}
 		
-		
+		return in;
 		
     }
     
     //table sort
-    public static void Table(int[] in){
+    public static int[] Table(int[] in){
     	//smallest number in the input is 0 and biggest is 9999
 		int[] occurrence= new int[9999+1];
 		
@@ -78,9 +79,9 @@ public class Sort{
 			for(int j=0; j<occurrence[i]; j++){
 				in[count]=i;
 				count++;
-				System.out.println(i+j+", "+count);
 		}
-	
+		
+		return in;
 	
     }
     

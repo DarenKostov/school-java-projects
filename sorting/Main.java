@@ -26,7 +26,7 @@ public class Main {
 		
 		Scanner scanner = new Scanner(System.in);
 		
-		filePath="./data-1k.txt";
+		filePath="./data-50.txt";
 		
 		try{
 			file= new Scanner(new File(filePath));
@@ -74,11 +74,12 @@ public class Main {
 				break;
 				
 		}
-
-		for(int i=0; i<input.length; i++){
-			System.out.println(input[i]);
+		System.out.println("Sample of 50 numbers:");
+		for(int i=0; i<50; i++){
+			System.out.print(input[i*input.length/50]+", ");
 		}
-		System.out.println("time: "+(time2-time1));
+
+		System.out.println("\ntime: "+(time2-time1));
 		
 		
 	}
