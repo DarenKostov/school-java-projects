@@ -82,8 +82,8 @@ public class Sort{
 	
     }
     
-    //quickshot sort
-    public static void Quickshot(int[] in){
+    //quicksort sort
+    public static void Quicksort(int[] in){
     
     }
 
