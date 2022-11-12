@@ -30,19 +30,25 @@ public class Main {
 		
 		Scanner scanner = new Scanner(System.in);
 		
-		System.out.println("Welcome to Sorting Algorithms speed testing.");
+		System.out.println("Welcome to Sorting Algorithms Speed Testing.");
 		
-		System.out.println("First input a file with all the data that is to be sorted.");
-		
-		System.out.print("\"data-50.txt\", \"data-100.txt\", \"data-1k.txt\", \"data-10k\", \"data-100k.txt\", and \"data-1mil.txt\", ");
-		System.out.println("should be initially in the original repository of this project.");
+		System.out.println("\nFirst input a file with all the data that is to be sorted.");
+
+		System.out.println("Files that should be initially in the original repository of this project.");
+		System.out.println("data-50.txt");
+		System.out.println("data-100.txt");
+		System.out.println("data-1k.txt");
+		System.out.println("data-10k.txt");
+		System.out.println("data-100k.txt");
+		System.out.println("data-1mil.txt");
 		
 		System.out.print("Input file path: ");
 		
 		
-		filePath="./data-50.txt";
 
 		filePath=scanner.nextLine();
+		if(filePath.equals("q"))
+			filePath="./data-50.txt";
 		
 		try{
 			file= new Scanner(new File(filePath));
@@ -88,6 +94,7 @@ public class Main {
 				case 3:
 					System.out.print("rd");
 					break;
+
 				default:
 					System.out.print("th");
 					break;
@@ -121,38 +128,50 @@ public class Main {
 		System.out.println("Sorting algorithms:\n1: Bubble\n2: Selection\n3: Table\n4: Quicksort");
 		System.out.print("Input a sorting algorithm: ");
 		
-		switch(Integer.parseInt(scanner.nextLine())){
-			case 1:
-				time1=System.currentTimeMillis();
-				Sort.Bubble(input);
-				time2=System.currentTimeMillis();
-				break;
-			case 2:	
-				time1=System.currentTimeMillis();
-				Sort.Selection(input);
-				time2=System.currentTimeMillis();
-				break;
-			case 3:	
-				time1=System.currentTimeMillis();
-				Sort.Table(input);
-				time2=System.currentTimeMillis();
-				break;
-			case 4:	
-				time1=System.currentTimeMillis();
-				input=Sort.Quicksort(input);
-				time2=System.currentTimeMillis();
-				break;
-			default:
-				System.out.println("Input a number between 1 and 4 (inclusive) next time.");
-				System.exit(0);
+		try{
+			switch(Integer.parseInt(scanner.nextLine())){
+				case 1:
+					time1=System.currentTimeMillis();
+					Sort.Bubble(input);
+					time2=System.currentTimeMillis();
+					break;
+				case 2:	
+					time1=System.currentTimeMillis();
+					Sort.Selection(input);
+					time2=System.currentTimeMillis();
+					break;
+				case 3:	
+					time1=System.currentTimeMillis();
+					Sort.Table(input);
+					time2=System.currentTimeMillis();
+					break;
+				case 4:	
+					time1=System.currentTimeMillis();
+					input=Sort.Quicksort(input);
+					time2=System.currentTimeMillis();
+					break;
+				default:
+					System.out.println("Invalid input: input a number between 1 and 4 (inclusive) next time.");
+					System.exit(0);
+			}
+		}catch(NumberFormatException e){
+			System.out.println("Invalid input: input a number next time.");
 		}
-		System.out.println("Sample of 50 numbers:");
+		
+		System.out.println("\nSample of 50 numbers:");
 		for(int i=0; i<50; i++){
 			System.out.print(input[i*input.length/50]+", ");
 		}
-
-		System.out.println("\ntime: "+(time2-time1));
 		
+		int time=(int)(time2-time1);
+		
+		int mili=time%1000;
+		int sec=(time-mili)/1000;
+		int min=sec/60;
+		sec=sec%60;
+		
+		
+		System.out.printf("\n\ntime: %d:%d.%d\n", min, sec, mili);
 		
 	}
 
