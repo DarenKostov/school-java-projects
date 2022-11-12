@@ -1,7 +1,13 @@
 /*
 	Daren Kotsov
 	Sorting
-	11/04/2022
+	
+	This program takes an input file of randomized numbers,
+	sorts the list (doesnt change the original file), gives 
+	you the time it took and stores it into "./output.txt"
+	
+	
+	11/12/2022
 	
 	
  */
