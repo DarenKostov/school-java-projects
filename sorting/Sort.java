@@ -45,7 +45,7 @@ public class Sort{
     
     //selection sort
     public static void Selection(int[] in){
-    	
+    	//find next biggest number and flip it with the current one
 		for(int i=0; i<in.length-1; i++){
 			int forMoving=i;
 			for(int j=i; j<in.length-1; j++){
@@ -63,7 +63,23 @@ public class Sort{
     
     //table sort
     public static void Table(int[] in){
-    
+    	//smallest number in the input is 0 and biggest is 9999
+		int[] occurrence= new int[9999+1];
+		
+		//set the occurance of each unique number
+		for(int i=0; i<in.length; i++)
+			occurrence[in[i]]++;
+		
+		//put all numbers times their occurances in the array (they are in order since they are in order in the occurance array)
+		int count=0;
+		for(int i=0; i<occurrence.length; i++)
+			for(int j=0; j<occurrence[i]; j++){
+				in[count]=i;
+				count++;
+				System.out.println(i+j+", "+count);
+		}
+	
+	
     }
     
     //quickshot sort

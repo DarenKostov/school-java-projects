@@ -26,7 +26,7 @@ public class Main {
 		
 		Scanner scanner = new Scanner(System.in);
 		
-		filePath="./data.txt";
+		filePath="./data-1k.txt";
 		
 		try{
 			file= new Scanner(new File(filePath));
@@ -60,6 +60,11 @@ public class Main {
 			case 2:	
 				time1=System.currentTimeMillis();
 				Sort.Selection(input);
+				time2=System.currentTimeMillis();
+				break;
+			case 3:	
+				time1=System.currentTimeMillis();
+				Sort.Table(input);
 				time2=System.currentTimeMillis();
 				break;
 		}
