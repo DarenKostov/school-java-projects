@@ -213,7 +213,7 @@ public class Main {
 			String input=scanner.nextLine();
 			
 			if(input.equals("Y") || input.equals("y"))
-				output+="\n Time (ms): "+time;
+				output+="\nTime (ms): "+time;
 			pw.write(output);
 			pw.close();			
 		
