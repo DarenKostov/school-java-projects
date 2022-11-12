@@ -17,6 +17,9 @@
 
 import java.util.Scanner;
 import java.io.File;
+import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.FileNotFoundException;
 
 public class Main {
@@ -31,7 +34,7 @@ public class Main {
 	private Main(){
 		
 		
-		
+		//FILE READING
 		
 		
 		Scanner scanner = new Scanner(System.in);
@@ -128,6 +131,10 @@ public class Main {
 		}
 		
 		
+		
+		//LIST SORTING
+		
+		
 		long time1=0, time2=0;
 		
 		System.out.println("Next, input a soritng algorithm.");
@@ -175,11 +182,50 @@ public class Main {
 		int sec=(time-mili)/1000;
 		int min=sec/60; //minutes are for the 1mil file and sorting/bubble algorithms
 		sec=sec%60;
+				
+		System.out.printf("\n\ntime: %d:%d.%04d\n", min, sec, mili);
 		
 		
-		System.out.printf("\n\ntime: %d:%d.%04d", min, sec, mili);
+		
+		//FILE SAVING
 		
 		
+		System.out.println("\nNext, save the sorted list in an output file.");
+		
+		System.out.println("Please don't use characters such as \"/\", \"*\", and  \"~\"");
+		System.out.print("Input output file: ");
+		
+
+		filePath=scanner.nextLine();
+		
+		
+		PrintWriter pw;
+		
+		try{
+			pw =new PrintWriter(new FileWriter(new File(filePath)));
+			String output="";
+			
+			for(int i=0; i<input.length; i++)
+				output+=input[i]+", ";
+				
+				
+			System.out.println("Store time in the file as well? (y/n)");
+			String input=scanner.nextLine();
+			
+			if(input.equals("Y") || input.equals("y"))
+				output+="\n Time (ms): "+time;
+			pw.write(output);
+			pw.close();			
+		
+		}catch(IOException e){
+			System.out.println("An error occured while writing the file.");
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		
+		
+		System.out.println("Sort complete, file written, job done.");
 		
 		
 	}
