@@ -1,13 +1,13 @@
 package dk;
 import robocode.*;
-//import java.awt.Color;
+import java.awt.Color;
 
 // API help : https://robocode.sourceforge.io/docs/robocode/robocode/Robot.html
 
 /**
  * Test - a robot by (your name here)
  */
-public class DAKT extends Robot
+public class DAKT extends AdvancedRobot
 {
 	/**
 	 * run: Test's default behavior
@@ -18,7 +18,17 @@ public class DAKT extends Robot
 		// After trying out your robot, try uncommenting the import at the top,
 		// and the next line:
 
-		// setColors(Color.red,Color.blue,Color.green); // body,gun,radar
+		Color body=new Color(0, 0, 0);
+		Color gun=new Color(0, 0, 0);
+		Color radar=new Color(119, 255, 119);
+		Color bullet=new Color(119, 255, 119);
+		Color arc=new Color(119, 255, 119);
+		
+		setColors(body, gun, radar, bullet, arc); // body,gun,radar
+		
+				
+		//setColors()
+
 
 		// Robot main loop
 		while(true) {
