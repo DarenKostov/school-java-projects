@@ -4,7 +4,8 @@
 	
 	This program takes an input file of randomized numbers,
 	sorts the list (doesnt change the original file), gives 
-	you the time it took and stores it into "./output.txt"
+	you the time it took and stores it into a specified
+	output file.
 	
 	
 	11/12/2022
