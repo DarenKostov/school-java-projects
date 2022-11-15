@@ -69,17 +69,28 @@ public class Main {
 			
 		}
 		
-		//split the data
-		dataSet= file.nextLine().split(", ");
+		//String to store the file contents, since we might access them multiple times
+		String fileStr=file.nextLine();
+
 		
+		//split the data
+		dataSet= fileStr.split(", ");
+			
 		//check if the entries are seperated correctly
 		if(dataSet.length<=1){
-			System.out.println("Where commas and/or spaces?");
-			System.out.println("Each entry in the file should be separated by a comma and a space \", \"");
-			System.out.println("Example:");
-			System.out.println("3, 71, 6, 2, 876, 1, 4, 7, 43");
-			System.out.println("Note that this error can be caused due to the file containg only 1 entry, in that case you should wonder where sorting only 1 number is applicable.");
-			System.exit(0);
+			
+			//split the data again, this time by just ","
+			dataSet= fileStr.split(",");
+		
+			//check if the entries are seperated correctly, again
+			if(dataSet.length<=1){
+				System.out.println("Where commas and/or spaces?");
+				System.out.println("Each entry in the file should be separated by a comma and a space \", \"");
+				System.out.println("Example:");
+				System.out.println("3, 71, 6, 2, 876, 1, 4, 7, 43");
+				System.out.println("Note that this error can be caused due to the file containg only 1 entry, in that case you should wonder where sorting only 1 number is applicable.");
+				System.exit(0);	
+			}		
 		}
 	
 	
