@@ -5,6 +5,13 @@
 
 	sources used:
 	https://www.reddit.com/r/gamedev/comments/16ceki/turret_aiming_formula/
+	
+EVERYTHING IS IN RADIANS, NO DEGREES, USE WHEN NECESSARY Math.toDegrees()
+
+
+
+	
+	
 */
 
 
@@ -55,9 +62,7 @@ public class DAKT extends AdvancedRobot
 	int targetDist=0;
 	
 	double rotation=0;
-	int rotationD=1;
 	
-	double nextAngleD=0;
 	double nextAngle=0;
 
 	public void onPaint(Graphics2D g) {
@@ -129,7 +134,6 @@ public class DAKT extends AdvancedRobot
 		aimAngle(getRobotCoords(e),getRobotVel(e), 1000);
 		
 		
-		rotationD=200;
 
 		
 		
@@ -158,6 +162,19 @@ public class DAKT extends AdvancedRobot
 	}	
 	
 	//custom functions
+	
+	
+	//accepts only radians, nothing else
+	private setGunBearing(double n){
+	
+		
+	
+	
+	}
+	
+	
+	
+	
 	
 	//grabs the targets coords
 	private double[] getRobotCoords(ScannedRobotEvent target){
@@ -224,13 +241,10 @@ private void aimAngle(double[] targetC, double[] targetD, double bulletSpeed) {
 	
 
 
-	nextAngleD=(angle/Math.PI*180);
-	nextAngle=angle;//(angle/Math.PI*180);
-//(int)getGunHeading();
+	nextAngle=angle;
 	
 	rotation=(nextAngle-getRotation());
 	
-	rotationD=(int)Math.toDegrees(rotation);
 
 
 	System.out.println("next:       "+nextAngle);
@@ -250,6 +264,11 @@ private void aimAngle(double[] targetC, double[] targetD, double bulletSpeed) {
 
 
 
+	}
+	
+	private double deg(double n){
+	return Math.toDegrees(n);
+	
 	}
 	
 	
