@@ -5,8 +5,10 @@
 
 	sources used:
 	https://www.reddit.com/r/gamedev/comments/16ceki/turret_aiming_formula/
+	Older projects of mine
+	https://stackoverflow.com/questions/1878907/how-can-i-find-the-smallest-difference-between-two-angles-around-a-point
 	
-EVERYTHING IS IN RADIANS, NO DEGREES, USE WHEN NECESSARY Math.toDegrees()
+EVERYTHING IS IN RADIANS, NO DEGREES, NEVER. USE Math.toDegrees() IF THE FUNCTION EXPECTS DEGREES 
 
 
 
@@ -61,7 +63,7 @@ public class DAKT extends AdvancedRobot
 	int targetDY=1;
 	int targetDist=0;
 	
-	double rotation=0;
+	double CurRotation=2;//current rotation
 	
 	double nextAngle=0;
 
@@ -83,7 +85,21 @@ public class DAKT extends AdvancedRobot
 		//draw where we think the target will be
 		
 	    g.setColor(java.awt.Color.ORANGE);
-	    g.fillRect((int)(Math.cos(nextAngle)*targetDist+getX()), (int)(Math.sin(nextAngle)*targetDist+getY()), 10, 10);
+	    g.fillRect((int)(Math.cos(CurRotation)*targetDist+getX()), (int)(Math.sin(CurRotation)*targetDist+getY()), 10, 10);
+	
+	
+	
+	
+	
+		g.setColor(new Color(0xff, 0x00, 0x00, 0x20));
+
+	    // Draw a line from our robot to the scanned robot
+	    g.drawLine(targetX+(int)getX(), targetY+(int)getY(), (int)getX(), (int)getY());
+
+	    // Draw a filled square on top of the scanned robot that covers it
+	    g.fillRect(targetX+(int)getX() - 20, targetY+(int)getY() - 20, 40, 40);
+	
+	
 	}
 
 
@@ -103,22 +119,24 @@ public class DAKT extends AdvancedRobot
 		Color arc=new Color(119, 255, 119);
 		
 		setColors(body, gun, radar, bullet, arc); // body,gun,radar
+
 		
 				
 		//setColors()
 
-
+//turnGunRight(360);
 		// Robot main loop
 		while(true) {
-			// Replace the next 4 lines with any behavior you would like
-			//ahead(100);
-			//turnGunRight(360);
-			//back(100);i
-			if(rotation<0)
-				turnGunRight(Math.min(2,-rotationD));
-			else
+			// System.out.println()
+		
+		
+			turnGunRight(5);
 			
-				turnGunLeft(Math.min(1,rotationD));
+			// if(CurRotation<0)
+			// 	turnGunRight(deg(-CurRotation));
+			// else
+	
+			// 	turnGunLeft(deg(CurRotation));
 		}
 	}
 
@@ -131,11 +149,16 @@ public class DAKT extends AdvancedRobot
 	
 		// getRobotCoords(e);
 		// getRobotVel(e);
-		aimAngle(getRobotCoords(e),getRobotVel(e), 1000);
+		setGunBearing(getTargetAngle(getRobotCoords(e),getRobotVel(e), 10000));
 		
 		
+			if(-CurRotation<0)
+				turnGunRight(deg(CurRotation));
+			else
+	
+				turnGunLeft(deg(-CurRotation));
 
-		
+		scan();
 		
 		
 		
@@ -165,11 +188,19 @@ public class DAKT extends AdvancedRobot
 	
 	
 	//accepts only radians, nothing else
-	private setGunBearing(double n){
+	private void setGunBearing(double n){
 	
 		
-	
-	
+		
+		// double difference=n-getGunRotation();
+		// double rotation=mod(((difference) + Math.PI),Math.PI*2) - Math.PI
+		double sour=getGunRotation();
+		double dest=n;
+		CurRotation=Math.atan2(Math.sin(dest-sour), Math.cos(dest-sour))/20;
+		
+		System.out.println(deg(CurRotation));
+		
+		
 	}
 	
 	
@@ -229,49 +260,51 @@ public class DAKT extends AdvancedRobot
 	}
 	
 	
-	//sets angle of rotation
+	//gets what our angle should be to be able to shoot the target
+	//0 is X, 1 us Y
+	private double getTargetAngle(double[] targetC, double[] targetD, double bulletSpeed) {
+	    double rCrossV = targetC[0] * targetD[0] - targetC[1] * targetD[0];
+	    double magR = Math.sqrt(targetC[0]*targetC[0] + targetC[1]*targetC[1]);
+	    double angleAdjust = -Math.asin(rCrossV / (bulletSpeed * magR));
+	
+		double angle= angleAdjust + Math.atan2(targetC[1], targetC[0]);
+	
+		
 
-//0 is X, 1 us Y
-private void aimAngle(double[] targetC, double[] targetD, double bulletSpeed) {
-    double rCrossV = targetC[0] * targetD[0] - targetC[1] * targetD[0];
-    double magR = Math.sqrt(targetC[0]*targetC[0] + targetC[1]*targetC[1]);
-    double angleAdjust = Math.asin(rCrossV / (bulletSpeed * magR));
-	
-	double angle= angleAdjust + Math.atan2(targetC[1], targetC[0]);
-	
+		nextAngle=angle;
+		
 
-
-	nextAngle=angle;
-	
-	rotation=(nextAngle-getRotation());
-	
-
-
-	System.out.println("next:       "+nextAngle);
-	System.out.println("current:    "+getRotation());
-	System.out.println("difference: "+rotation);
-}
+		// System.out.println("next:       "+nextAngle);
+		// System.out.println("current:    "+getGunRotation());
+		
+		return angle;
+		
+		
+		
+	}
 	
 	
-	//get the rotation, does not go above pi*2 or bellow 0 
-	private double getRotation(){
+		//get the rotation, does not go above pi*2 or bellow 0 
+		private double getGunRotation(){
 				
-		double output=getGunHeadingRadians();
+			double output=getGunHeadingRadians();
 		
-		output%=(Math.PI*2);
-		
-		return output;
+			output%=(Math.PI*2);
+			
+			return output;
 
 
 
-	}
+		}
 	
-	private double deg(double n){
-	return Math.toDegrees(n);
+		private double deg(double n){
+		return Math.toDegrees(n);
 	
-	}
-	
-	
+		}
+	//number and mod
+	private double modulo(double n, double m){
+		return (n - Math.floor(n/m) * m);
+	}	
 	
 	
 }
