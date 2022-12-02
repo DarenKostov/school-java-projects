@@ -60,14 +60,14 @@ import java.awt.Graphics2D;
 /**
  * Test - a robot by (your name here)
  */
-public class DAKT extends AdvancedRobot
+public class MentalMap extends AdvancedRobot
 {
 
 
 	int targetX=0;
 	int targetY=0;
 	int targetDist=0;
-	// List<RobotData> enemies=new ArrayList<RobotData>();
+	List<RobotData> enemies=new ArrayList<RobotData>();
 	
 	
 
@@ -125,7 +125,7 @@ public class DAKT extends AdvancedRobot
 		while(true) {
 			// System.out.println()
 	
-		turnRadarRightRadians(dir*Math.PI*2);//Double.POSITIVE_INFINITY);
+		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 			 turnGunRight(5);
 			
 			// if(CurRotation<0)
@@ -139,11 +139,8 @@ public class DAKT extends AdvancedRobot
 	/**
 	 * onScannedRobot: What to do when you see another robot
 	 */
-	int dir=1;
 	public void onScannedRobot(ScannedRobotEvent e) {
-	dir=-dir;
 		fire(1);
-		scan();
 		// getRobotCoords(e);
 		// getRobotVel(e);
 		
@@ -220,6 +217,15 @@ public class DAKT extends AdvancedRobot
 	private double modulo(double n, double m){
 		return (n - Math.floor(n/m) * m);
 	}	
+	
+	
+	class RobotData{
+		double X
+		double Y
+		String Name
+	
+	}	
+	
 	
 	
 }
