@@ -1,14 +1,10 @@
 /*
 	Daren Kostov
 	robocode robot
-	DAK-Test
+	Mental map robot- a robot that creates a map of all enemies
 
 	sources used:
-	https://www.reddit.com/r/gamedev/comments/16ceki/turret_aiming_formula/
-	Older projects of mine
-	https://stackoverflow.com/questions/1878907/how-can-i-find-the-smallest-difference-between-two-angles-around-a-point
 	
-EVERYTHING IS IN RADIANS, NO DEGREES, NEVER. USE Math.toDegrees() IF THE FUNCTION EXPECTS DEGREES 
 
 
 
@@ -17,17 +13,6 @@ EVERYTHING IS IN RADIANS, NO DEGREES, NEVER. USE Math.toDegrees() IF THE FUNCTIO
 */
 
 
-
-/*
-function aimAngle(target, bulletSpeed) {
-    var rCrossV = target.x * target.vy - target.y * target.vx;
-    var magR = Math.sqrt(target.x*target.x + target.y*target.y);
-    var angleAdjust = Math.asin(rCrossV / (bulletSpeed * magR));
-
-    return angleAdjust + Math.atan2(target.y, target.x);
-}
-
-*/
 
 //TODO
 //get target coords
@@ -44,10 +29,11 @@ import java.awt.Color;
 
 import java.lang.Math;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+
+
+
+import java.util.*;
 
 //for debugging
 import java.awt.Graphics2D;
@@ -64,10 +50,16 @@ public class MentalMap extends AdvancedRobot
 {
 
 
-	int targetX=0;
-	int targetY=0;
-	int targetDist=0;
-	List<RobotData> enemies=new ArrayList<RobotData>();
+	// final Map<String, RobotData> enemyMap;
+
+
+	
+	public MentalMap(){
+	// 	enemyMap = new LinkedHashMap<String, RobotData>(5, 2, true);
+
+
+	}
+	
 	
 	
 
@@ -76,17 +68,11 @@ public class MentalMap extends AdvancedRobot
 	    g.setColor(java.awt.Color.RED);
 
 	
-	
-	
-	
-	
 		g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
-
-	    // Draw a line from our robot to the scanned robot
-	    g.drawLine(targetX+(int)getX(), targetY+(int)getY(), (int)getX(), (int)getY());
-
-	    // Draw a filled square on top of the scanned robot that covers it
-	    g.fillRect(targetX+(int)getX() - 20, targetY+(int)getY() - 20, 40, 40);
+	
+		// for (RobotData robot : enemyMap.values()) {
+		//     g.fillRect((int)robot.X - 20, (int)robot.Y-20, 40, 40);
+		// }	
 	
 	
 	}
@@ -116,23 +102,13 @@ public class MentalMap extends AdvancedRobot
 		setColors(body, gun, radar, bullet, arc); // body,gun,radar
 
 		
-				
-		//setColors()
-
-//turnGunRight(360);
-		// Robot main loop
-		
+		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 		while(true) {
 			// System.out.println()
 	
-		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
-			 turnGunRight(5);
+			// turnRadarRightRadians(Math.PI*2);
+			turnGunRight(5);
 			
-			// if(CurRotation<0)
-			// 	turnGunRight(deg(-CurRotation));
-			// else
-	
-			// 	turnGunLeft(deg(CurRotation));
 		}
 	}
 
@@ -140,9 +116,18 @@ public class MentalMap extends AdvancedRobot
 	 * onScannedRobot: What to do when you see another robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
-		fire(1);
-		// getRobotCoords(e);
-		// getRobotVel(e);
+	
+		// String name=e.getName();
+		
+		// RobotData robot=enemyMap.get(name);
+		
+		
+		// if(robot==null){//if robot isnt in our map, add it
+		// 	robot = new RobotData(e);
+		// 	enemyMap.put(name, robot);
+			
+		// }else//if it is in our map, update its info
+		// 	robot.update(e);
 		
 		
 	}
@@ -163,69 +148,32 @@ public class MentalMap extends AdvancedRobot
 		//back(20);
 	}	
 	
-	//custom functions
-	
-	
-	
-	//grabs the targets coords
-	private double[] getRobotCoords(ScannedRobotEvent target){
-		double[] coords= new double[2];
-		
-		
-		double myDir=getGunHeadingRadians();
-		double tarDis=target.getDistance();
-		
-		targetDist=(int)tarDis;
-		//X
-		coords[0]=Math.sin(myDir);
-		coords[0]*=tarDis;	
-				
-		//Y
-		coords[1]=Math.cos(myDir);
-		coords[1]*=tarDis;	
-		
-		targetX=(int)coords[0];
-		targetY=(int)coords[1];
-		
-		
-		return coords;		
-		
-	
-	}
-	
-	
-	
-	
-		//get the rotation, does not go above pi*2 or bellow 0 
-		private double getGunRotation(){
-				
-			double output=getGunHeadingRadians();
-		
-			output%=(Math.PI*2);
-			
-			return output;
-
-
-
-		}
-	
-		private double deg(double n){
-		return Math.toDegrees(n);
-	
-		}
-	//number and mod
-	private double modulo(double n, double m){
-		return (n - Math.floor(n/m) * m);
-	}	
-	
 	
 	class RobotData{
-		double X
-		double Y
-		String Name
-	
+		double X;
+		double Y;
+		String Name;		
+		
+		RobotData(ScannedRobotEvent robot){
+			
+			//set the coords
+			update(robot);
+			
+			//set the name, so its distiguashable
+			Name=robot.getName();
+		}
+		
+		void update (ScannedRobotEvent robot){
+		
+			double angle = getHeadingRadians() + robot.getBearingRadians();
+			double distance=robot.getDistance();
+			
+			//set X and Y
+			X=getX() + Math.sin(angle) * distance;
+			Y=getY() + Math.cos(angle) * distance;
+
+		}
 	}	
-	
 	
 	
 }
