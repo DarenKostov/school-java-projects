@@ -50,12 +50,12 @@ public class MentalMap extends AdvancedRobot
 {
 
 
-	// final Map<String, RobotData> enemyMap;
+	final Map<String, RobotData> enemyMap;
 
 
 	
 	public MentalMap(){
-	// 	enemyMap = new LinkedHashMap<String, RobotData>(5, 2, true);
+		enemyMap = new LinkedHashMap<String, RobotData>(5, 2, true);
 
 
 	}
@@ -70,9 +70,9 @@ public class MentalMap extends AdvancedRobot
 	
 		g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
 	
-		// for (RobotData robot : enemyMap.values()) {
-		//     g.fillRect((int)robot.X - 20, (int)robot.Y-20, 40, 40);
-		// }	
+		for (RobotData robot : enemyMap.values()) {
+		    g.fillRect((int)robot.x - 20, (int)robot.y-20, 40, 40);
+		}	
 	
 	
 	}
@@ -106,8 +106,16 @@ public class MentalMap extends AdvancedRobot
 		while(true) {
 			// System.out.println()
 	
-			// turnRadarRightRadians(Math.PI*2);
+			// turnRadarRightRadians(1);
 			turnGunRight(5);
+			
+			
+			
+			
+		for (RobotData robot : enemyMap.values()) {
+
+			robot.updateCoordsFromVelocity();
+		}
 			
 		}
 	}
@@ -117,17 +125,17 @@ public class MentalMap extends AdvancedRobot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
 	
-		// String name=e.getName();
+		String name=e.getName();
 		
-		// RobotData robot=enemyMap.get(name);
+		RobotData robot=enemyMap.get(name);
 		
 		
-		// if(robot==null){//if robot isnt in our map, add it
-		// 	robot = new RobotData(e);
-		// 	enemyMap.put(name, robot);
+		if(robot==null){//if robot isnt in our map, add it
+			robot = new RobotData(e);
+			enemyMap.put(name, robot);
 			
-		// }else//if it is in our map, update its info
-		// 	robot.update(e);
+		}else//if it is in our map, update its info
+			robot.update(e);
 		
 		
 	}
@@ -150,9 +158,12 @@ public class MentalMap extends AdvancedRobot
 	
 	
 	class RobotData{
-		double X;
-		double Y;
-		String Name;		
+		final String name;		
+		double x;
+		double y;
+		double dX;
+		double dY;
+		
 		
 		RobotData(ScannedRobotEvent robot){
 			
@@ -160,19 +171,45 @@ public class MentalMap extends AdvancedRobot
 			update(robot);
 			
 			//set the name, so its distiguashable
-			Name=robot.getName();
+			name=robot.getName();
 		}
 		
 		void update (ScannedRobotEvent robot){
+			updateCoords(robot);
+			updateVelocity(robot);
+		}
+		
+		
+		void updateCoords (ScannedRobotEvent robot){
 		
 			double angle = getHeadingRadians() + robot.getBearingRadians();
 			double distance=robot.getDistance();
 			
 			//set X and Y
-			X=getX() + Math.sin(angle) * distance;
-			Y=getY() + Math.cos(angle) * distance;
+			x=getX() + Math.sin(angle) * distance;
+			y=getY() + Math.cos(angle) * distance;
 
 		}
+		
+		void updateVelocity (ScannedRobotEvent robot){
+			double direction=robot.getHeadingRadians();
+			double velocity=robot.getVelocity();
+			
+			dX=Math.sin(direction)*velocity;
+			dY=Math.cos(direction)*velocity;
+		}
+		
+		void updateCoordsFromVelocity(){
+		
+			x+=dX;
+			y+=dY;
+		
+		
+		}
+		
+		
+						
+		
 	}	
 	
 	
