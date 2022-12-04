@@ -70,9 +70,16 @@ public class MentalMap extends AdvancedRobot
 	
 	
 		for (RobotData robot : enemyMap.values()) {
-			g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
-									
-			g.fillRect((int)robot.x - 20, (int)robot.y-20, 40, 40);
+			if(robot.fired)
+				g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
+			else			
+				g.setColor(new Color(0x00, 0xff, 0x00, 0x50));
+						
+			g.fillOval((int)robot.x - 20, (int)robot.y-20, 40, 40);
+			
+			
+			g.setColor(new Color(0x00, 0x00, 0x00));
+			g.drawOval((int)robot.x - 20, (int)robot.y-20, 40, 40);
 			
 			
 		    g.setColor(java.awt.Color.RED);
@@ -209,7 +216,11 @@ public class MentalMap extends AdvancedRobot
 		double bearing;
 		double distance;
 		
+		
+		//when fired variables
 		boolean fired=false;
+		double xWhenFired;
+		double yWhenFired;
 		
 		RobotData(ScannedRobotEvent robot){
 			
@@ -237,8 +248,16 @@ public class MentalMap extends AdvancedRobot
 			distance=robot.getDistance();
 		
 			bodyAngle=robot.getHeadingRadians();
+			gunAngle=robot.getHeadingRadians();
 			velocity=robot.getVelocity();
-			
+
+			//checks if the robot fired (lost 0-4 energy)
+			if(energy-robot.getEnergy()>0 && energy-robot.getEnergy()<4){
+				xWhenFired=x
+				yWhenFired=y
+				fired=true;
+			}else
+				fired=false;
 			energy=robot.getEnergy();			
 		}
 		
