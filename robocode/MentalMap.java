@@ -253,8 +253,8 @@ public class MentalMap extends AdvancedRobot
 
 			//checks if the robot fired (lost 0-4 energy)
 			if(energy-robot.getEnergy()>0 && energy-robot.getEnergy()<4){
-				xWhenFired=x
-				yWhenFired=y
+				xWhenFired=x;
+				yWhenFired=y;
 				fired=true;
 			}else
 				fired=false;
