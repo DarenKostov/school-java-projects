@@ -68,10 +68,16 @@ public class MentalMap extends AdvancedRobot
 	    g.setColor(java.awt.Color.RED);
 
 	
-		g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
 	
 		for (RobotData robot : enemyMap.values()) {
-		    g.fillRect((int)robot.x - 20, (int)robot.y-20, 40, 40);
+			g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
+									
+			g.fillRect((int)robot.x - 20, (int)robot.y-20, 40, 40);
+			
+			
+		    g.setColor(java.awt.Color.RED);
+
+			g.drawLine((int)robot.x, (int)robot.y, (int)(robot.x+Math.sin(robot.gunAngle)*100), (int)(robot.y+Math.cos(robot.gunAngle)*100));	
 		}	
 	
 	
@@ -106,16 +112,19 @@ public class MentalMap extends AdvancedRobot
 		while(true) {
 			// System.out.println()
 	
-			// turnRadarRightRadians(1);
-			turnGunRight(5);
+			 // turnRadarRightRadians(Math.PI*2);
+			 turnGunRight(5);
 			
 			
 			
 			
-		for (RobotData robot : enemyMap.values()) {
-
-			robot.updateCoordsFromVelocity();
-		}
+			for (RobotData robot : enemyMap.values()) {
+				robot.predictNextCoords();
+			
+			
+			
+			
+			}
 			
 		}
 	}
@@ -137,8 +146,19 @@ public class MentalMap extends AdvancedRobot
 		}else//if it is in our map, update its info
 			robot.update(e);
 		
-		
+
+		// setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());	
 	}
+
+
+	
+	//remove dead robots from our mental map
+	public void onRobotDeath(RobotDeathEvent e) {
+		enemyMap.remove(e.getName());
+	}
+
+
+
 
 	/**
 	 * onHitByBullet: What to do when you're hit by a bullet
@@ -155,15 +175,41 @@ public class MentalMap extends AdvancedRobot
 		// Replace the next line with any behavior you would like
 		//back(20);
 	}	
+
 	
-	
+		
+			
+	//class that stores robot data
+	//TODO find a way to get the robots gun & radar angles
 	class RobotData{
 		final String name;		
+		//coords
 		double x;
 		double y;
+		
+		//deltas
 		double dX;
 		double dY;
+		double velocity;
 		
+		//angles
+		double bodyAngle;
+		double gunAngle;
+		double radarAngle;
+			
+			
+		//the angle between us and this robot
+		//(we gotta have this angle to shoot the robot) 
+		double usAngle;
+		//same as usAngle but in the future
+		double nextUsAngle;
+
+		//misc
+		double energy;
+		double bearing;
+		double distance;
+		
+		boolean fired=false;
 		
 		RobotData(ScannedRobotEvent robot){
 			
@@ -174,41 +220,51 @@ public class MentalMap extends AdvancedRobot
 			name=robot.getName();
 		}
 		
+		//updates everything in a RobotData
 		void update (ScannedRobotEvent robot){
+			updateNoCalc(robot);
 			updateCoords(robot);
-			updateVelocity(robot);
-		}
-		
-		
-		void updateCoords (ScannedRobotEvent robot){
-		
-			double angle = getHeadingRadians() + robot.getBearingRadians();
-			double distance=robot.getDistance();
+			updateDeltas(robot);
 			
-			//set X and Y
-			x=getX() + Math.sin(angle) * distance;
-			y=getY() + Math.cos(angle) * distance;
 
 		}
 		
-		void updateVelocity (ScannedRobotEvent robot){
-			double direction=robot.getHeadingRadians();
-			double velocity=robot.getVelocity();
+		
+		//updates data that doesnt have to be calculated
+		void updateNoCalc (ScannedRobotEvent robot){
 			
-			dX=Math.sin(direction)*velocity;
-			dY=Math.cos(direction)*velocity;
+			bearing=robot.getBearingRadians();		
+			distance=robot.getDistance();
+		
+			bodyAngle=robot.getHeadingRadians();
+			velocity=robot.getVelocity();
+			
+			energy=robot.getEnergy();			
 		}
 		
-		void updateCoordsFromVelocity(){
 		
+		//updates the coordinates 
+		void updateCoords (ScannedRobotEvent robot){
+			usAngle = getHeadingRadians()+bearing;
+			
+			//set X and Y
+			x=getX()+Math.sin(usAngle)*distance;
+			y=getY()+Math.cos(usAngle)*distance;
+
+		}
+		
+		
+		//updates the deltas
+		void updateDeltas (ScannedRobotEvent robot){
+			
+			dX=Math.sin(bodyAngle)*velocity;
+			dY=Math.cos(bodyAngle)*velocity;
+		}
+		
+		void predictNextCoords(){
 			x+=dX;
 			y+=dY;
-		
-		
 		}
-		
-		
-						
 		
 	}	
 	
