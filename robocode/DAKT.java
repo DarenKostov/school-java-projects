@@ -4,8 +4,8 @@
 	Mental map robot- a robot that creates a map of all enemies
 
 	sources used:
-	
-
+	http://mark.random-article.com/weber/java/robocode/	
+	https://www.reddit.com/r/gamedev/comments/16ceki/turret_aiming_formula/
 
 
 	
@@ -54,6 +54,17 @@ public class DAKT extends AdvancedRobot
 
 
 	
+	double fa=0;
+	
+	
+	// double width=getBattleFieldWidth();
+	// double height=getBattleFieldHeight();
+	
+
+
+	
+	
+	
 	public DAKT(){
 		enemyMap = new LinkedHashMap<String, RobotData>(5, 2, true);
 
@@ -85,6 +96,10 @@ public class DAKT extends AdvancedRobot
 		    g.setColor(java.awt.Color.RED);
 
 			g.drawLine((int)robot.x, (int)robot.y, (int)(robot.x+Math.sin(robot.gunAngle)*100), (int)(robot.y+Math.cos(robot.gunAngle)*100));	
+
+			
+						
+			g.drawLine((int)(getX()+1000*Math.sin(fa)), (int)(getY()+1000*Math.cos(fa)), (int)(getX()-1000*Math.sin(fa)), (int)(getY()-1000*Math.cos(fa)));	
 		}	
 	
 	
@@ -126,12 +141,40 @@ public class DAKT extends AdvancedRobot
 			
 			
 			for (RobotData robot : enemyMap.values()) {
+				
+				
+				
+				if(robot.hasFired()){
+				
+
+					fa=robot.usAngle;
+					//turn perpendicular to the fired shot
+					turnRightRadians(robot.bearing+Math.PI/2);
+					
+
+					double heading=getHeadingRadians();
+					
+					
+					//make sure we dont go into a wall
+					double nextX=getX()+Math.cos(heading)*100;
+					double nextY=getY()+Math.sin(heading)*100;
+					
+					if(nextX<0 || nextY<0 || nextX>getBattleFieldWidth() || nextY>getBattleFieldHeight())
+						back(100);
+					else
+						ahead(100);
+					
+				}
+				
+				
+				
 				robot.predictNextCoords();
-			
-			
-			
+				
+				
+				
 			
 			}
+			
 			
 		}
 	}
@@ -183,6 +226,32 @@ public class DAKT extends AdvancedRobot
 		//back(20);
 	}	
 
+	
+	
+	
+	
+	
+
+
+double aimAngle(RobotData target, double bulletSpeed) {
+
+    double rCrossV = target.x * target.dy - target.y * target.dx;
+    double magR = Math.sqrt(target.x*target.x + target.y*target.y);
+    double angleAdjust = Math.asin(rCrossV / (bulletSpeed * magR));
+
+    return angleAdjust + Math.atan2(target.y, target.x);
+}
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 		
 			
@@ -256,9 +325,17 @@ public class DAKT extends AdvancedRobot
 				xWhenFired=x;
 				yWhenFired=y;
 				fired=true;
-			}else
-				fired=false;
+			}
+
 			energy=robot.getEnergy();			
+		}
+		
+		
+		boolean hasFired(){
+			boolean tmp=fired;
+			fired=false;
+			return tmp;
+		
 		}
 		
 		
