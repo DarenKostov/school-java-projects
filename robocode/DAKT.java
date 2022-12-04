@@ -6,7 +6,7 @@
 	sources used:
 	http://mark.random-article.com/weber/java/robocode/	
 	https://www.reddit.com/r/gamedev/comments/16ceki/turret_aiming_formula/
-
+	https://stackoverflow.com/questions/1878907/how-can-i-find-the-smallest-difference-between-two-angles-around-a-point
 
 	
 	
@@ -135,7 +135,8 @@ public class DAKT extends AdvancedRobot
 			// System.out.println()
 	
 			 // turnRadarRightRadians(Math.PI*2);
-			 turnGunRight(5);
+			if(enemyMap.isEmpty())
+				turnGunRight(5);
 			
 			
 			
@@ -147,7 +148,6 @@ public class DAKT extends AdvancedRobot
 				if(robot.hasFired()){
 				
 
-					fa=robot.usAngle;
 					//turn perpendicular to the fired shot
 					turnRightRadians(robot.bearing+Math.PI/2);
 					
@@ -159,16 +159,40 @@ public class DAKT extends AdvancedRobot
 					double nextX=getX()+Math.cos(heading)*100;
 					double nextY=getY()+Math.sin(heading)*100;
 					
-					if(nextX<0 || nextY<0 || nextX>getBattleFieldWidth() || nextY>getBattleFieldHeight())
-						back(100);
-					else
-						ahead(100);
+					// if(nextX<0 || nextY<0 || nextX>getBattleFieldWidth() || nextY>getBattleFieldHeight())
+					// 	back(100);
+					// else
+					// 	ahead(100);
 					
 				}
 				
 				
 				
+				
 				robot.predictNextCoords();
+
+				// double angle=((getHeadingRadians()+robot.bearing-getGunHeadingRadians()));
+				double angle=aimAngle(robot, 10000);
+				fa=angle;
+				angle-=getGunHeadingRadians();
+				
+				angle=Utils.normalRelativeAngle(angle);
+				System.out.println(robot.x);
+				System.out.println("=================");
+								
+				
+				if(angle<Math.PI)
+					turnGunRightRadians(angle);
+				else
+					turnGunLeftRadians(angle-Math.PI);
+				
+				robot.predictNextCoords();
+				
+				// fire(1);
+								
+				// fa=getHeadingRadians() - getGunHeadingRadians() + robot.bearing;//aimAngle(robot,1000);				
+				
+				
 				
 				
 				
@@ -233,20 +257,33 @@ public class DAKT extends AdvancedRobot
 	
 
 
-double aimAngle(RobotData target, double bulletSpeed) {
+	double aimAngle(RobotData target, double bulletSpeed) {
+		
+		double targetx=target.x-getX();
+		double targety=target.y-getY();
+		double targetdx=target.dX;
+		double targetdy=target.dY;
+	
+	
+	
+	    double rCrossV = targetx * targetdy - targety * targetdx;
+	    double magR = Math.sqrt(targetx*targetx + targety*targety);
+	    double angleAdjust = Math.asin(rCrossV / (bulletSpeed * magR));
 
-    double rCrossV = target.x * target.dy - target.y * target.dx;
-    double magR = Math.sqrt(target.x*target.x + target.y*target.y);
-    double angleAdjust = Math.asin(rCrossV / (bulletSpeed * magR));
-
-    return angleAdjust + Math.atan2(target.y, target.x);
-}
+	    return angleAdjust + Math.atan2(targetx, targety);
+	}
 
 	
 	
 	
 	
 	
+
+    //number and mod
+    private double modulo(double n, double m){
+            return (n - Math.floor(n/m) * m);
+    }
+
 	
 	
 	
@@ -291,8 +328,11 @@ double aimAngle(RobotData target, double bulletSpeed) {
 		double xWhenFired;
 		double yWhenFired;
 		
+		ScannedRobotEvent event;
+		
+		
 		RobotData(ScannedRobotEvent robot){
-			
+
 			//set the coords
 			update(robot);
 			
@@ -302,6 +342,7 @@ double aimAngle(RobotData target, double bulletSpeed) {
 		
 		//updates everything in a RobotData
 		void update (ScannedRobotEvent robot){
+			event=robot;
 			updateNoCalc(robot);
 			updateCoords(robot);
 			updateDeltas(robot);
