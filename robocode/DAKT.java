@@ -1,14 +1,10 @@
 /*
 	Daren Kostov
 	robocode robot
-	DAK-Test
+	Mental map robot- a robot that creates a map of all enemies
 
 	sources used:
-	https://www.reddit.com/r/gamedev/comments/16ceki/turret_aiming_formula/
-	Older projects of mine
-	https://stackoverflow.com/questions/1878907/how-can-i-find-the-smallest-difference-between-two-angles-around-a-point
 	
-EVERYTHING IS IN RADIANS, NO DEGREES, NEVER. USE Math.toDegrees() IF THE FUNCTION EXPECTS DEGREES 
 
 
 
@@ -17,17 +13,6 @@ EVERYTHING IS IN RADIANS, NO DEGREES, NEVER. USE Math.toDegrees() IF THE FUNCTIO
 */
 
 
-
-/*
-function aimAngle(target, bulletSpeed) {
-    var rCrossV = target.x * target.vy - target.y * target.vx;
-    var magR = Math.sqrt(target.x*target.x + target.y*target.y);
-    var angleAdjust = Math.asin(rCrossV / (bulletSpeed * magR));
-
-    return angleAdjust + Math.atan2(target.y, target.x);
-}
-
-*/
 
 //TODO
 //get target coords
@@ -44,10 +29,11 @@ import java.awt.Color;
 
 import java.lang.Math;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
+
+
+
+import java.util.*;
 
 //for debugging
 import java.awt.Graphics2D;
@@ -64,10 +50,16 @@ public class DAKT extends AdvancedRobot
 {
 
 
-	int targetX=0;
-	int targetY=0;
-	int targetDist=0;
-	// List<RobotData> enemies=new ArrayList<RobotData>();
+	final Map<String, RobotData> enemyMap;
+
+
+	
+	public DAKT(){
+		enemyMap = new LinkedHashMap<String, RobotData>(5, 2, true);
+
+
+	}
+	
 	
 	
 
@@ -77,16 +69,23 @@ public class DAKT extends AdvancedRobot
 
 	
 	
-	
-	
-	
-		g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
+		for (RobotData robot : enemyMap.values()) {
+			if(robot.fired)
+				g.setColor(new Color(0xff, 0x00, 0x00, 0x50));
+			else			
+				g.setColor(new Color(0x00, 0xff, 0x00, 0x50));
+						
+			g.fillOval((int)robot.x - 20, (int)robot.y-20, 40, 40);
+			
+			
+			g.setColor(new Color(0x00, 0x00, 0x00));
+			g.drawOval((int)robot.x - 20, (int)robot.y-20, 40, 40);
+			
+			
+		    g.setColor(java.awt.Color.RED);
 
-	    // Draw a line from our robot to the scanned robot
-	    g.drawLine(targetX+(int)getX(), targetY+(int)getY(), (int)getX(), (int)getY());
-
-	    // Draw a filled square on top of the scanned robot that covers it
-	    g.fillRect(targetX+(int)getX() - 20, targetY+(int)getY() - 20, 40, 40);
+			g.drawLine((int)robot.x, (int)robot.y, (int)(robot.x+Math.sin(robot.gunAngle)*100), (int)(robot.y+Math.cos(robot.gunAngle)*100));	
+		}	
 	
 	
 	}
@@ -116,39 +115,57 @@ public class DAKT extends AdvancedRobot
 		setColors(body, gun, radar, bullet, arc); // body,gun,radar
 
 		
-				
-		//setColors()
-
-//turnGunRight(360);
-		// Robot main loop
-		
+		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 		while(true) {
 			// System.out.println()
 	
-		turnRadarRightRadians(dir*Math.PI*2);//Double.POSITIVE_INFINITY);
+			 // turnRadarRightRadians(Math.PI*2);
 			 turnGunRight(5);
 			
-			// if(CurRotation<0)
-			// 	turnGunRight(deg(-CurRotation));
-			// else
-	
-			// 	turnGunLeft(deg(CurRotation));
+			
+			
+			
+			for (RobotData robot : enemyMap.values()) {
+				robot.predictNextCoords();
+			
+			
+			
+			
+			}
+			
 		}
 	}
 
 	/**
 	 * onScannedRobot: What to do when you see another robot
 	 */
-	int dir=1;
 	public void onScannedRobot(ScannedRobotEvent e) {
-	dir=-dir;
-		fire(1);
-		scan();
-		// getRobotCoords(e);
-		// getRobotVel(e);
+	
+		String name=e.getName();
+		
+		RobotData robot=enemyMap.get(name);
 		
 		
+		if(robot==null){//if robot isnt in our map, add it
+			robot = new RobotData(e);
+			enemyMap.put(name, robot);
+			
+		}else//if it is in our map, update its info
+			robot.update(e);
+		
+
+		// setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());	
 	}
+
+
+	
+	//remove dead robots from our mental map
+	public void onRobotDeath(RobotDeathEvent e) {
+		enemyMap.remove(e.getName());
+	}
+
+
+
 
 	/**
 	 * onHitByBullet: What to do when you're hit by a bullet
@@ -165,60 +182,109 @@ public class DAKT extends AdvancedRobot
 		// Replace the next line with any behavior you would like
 		//back(20);
 	}	
+
 	
-	//custom functions
-	
-	
-	
-	//grabs the targets coords
-	private double[] getRobotCoords(ScannedRobotEvent target){
-		double[] coords= new double[2];
 		
-		
-		double myDir=getGunHeadingRadians();
-		double tarDis=target.getDistance();
-		
-		targetDist=(int)tarDis;
-		//X
-		coords[0]=Math.sin(myDir);
-		coords[0]*=tarDis;	
-				
-		//Y
-		coords[1]=Math.cos(myDir);
-		coords[1]*=tarDis;	
-		
-		targetX=(int)coords[0];
-		targetY=(int)coords[1];
-		
-		
-		return coords;		
-		
-	
-	}
-	
-	
-	
-	
-		//get the rotation, does not go above pi*2 or bellow 0 
-		private double getGunRotation(){
-				
-			double output=getGunHeadingRadians();
-		
-			output%=(Math.PI*2);
 			
-			return output;
+	//class that stores robot data
+	//TODO find a way to get the robots gun & radar angles
+	class RobotData{
+		final String name;		
+		//coords
+		double x;
+		double y;
+		
+		//deltas
+		double dX;
+		double dY;
+		double velocity;
+		
+		//angles
+		double bodyAngle;
+		double gunAngle;
+		double radarAngle;
+			
+			
+		//the angle between us and this robot
+		//(we gotta have this angle to shoot the robot) 
+		double usAngle;
+		//same as usAngle but in the future
+		double nextUsAngle;
 
-
+		//misc
+		double energy;
+		double bearing;
+		double distance;
+		
+		
+		//when fired variables
+		boolean fired=false;
+		double xWhenFired;
+		double yWhenFired;
+		
+		RobotData(ScannedRobotEvent robot){
+			
+			//set the coords
+			update(robot);
+			
+			//set the name, so its distiguashable
+			name=robot.getName();
+		}
+		
+		//updates everything in a RobotData
+		void update (ScannedRobotEvent robot){
+			updateNoCalc(robot);
+			updateCoords(robot);
+			updateDeltas(robot);
+			
 
 		}
-	
-		private double deg(double n){
-		return Math.toDegrees(n);
-	
+		
+		
+		//updates data that doesnt have to be calculated
+		void updateNoCalc (ScannedRobotEvent robot){
+			
+			bearing=robot.getBearingRadians();		
+			distance=robot.getDistance();
+		
+			bodyAngle=robot.getHeadingRadians();
+			gunAngle=robot.getHeadingRadians();
+			velocity=robot.getVelocity();
+
+			//checks if the robot fired (lost 0-4 energy)
+			if(energy-robot.getEnergy()>0 && energy-robot.getEnergy()<4){
+				xWhenFired=x;
+				yWhenFired=y;
+				fired=true;
+			}else
+				fired=false;
+			energy=robot.getEnergy();			
 		}
-	//number and mod
-	private double modulo(double n, double m){
-		return (n - Math.floor(n/m) * m);
+		
+		
+		//updates the coordinates 
+		void updateCoords (ScannedRobotEvent robot){
+			usAngle = getHeadingRadians()+bearing;
+			
+			//set X and Y
+			x=getX()+Math.sin(usAngle)*distance;
+			y=getY()+Math.cos(usAngle)*distance;
+
+		}
+		
+		
+		//updates the deltas
+		void updateDeltas (ScannedRobotEvent robot){
+			
+			dX=Math.sin(bodyAngle)*velocity;
+			dY=Math.cos(bodyAngle)*velocity;
+		}
+		
+		void predictNextCoords(){
+			x+=dX;
+			y+=dY;
+		}
+		
 	}	
 	
 	
