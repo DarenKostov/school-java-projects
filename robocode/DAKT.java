@@ -1,7 +1,7 @@
 /*
 	Daren Kostov
 	robocode robot
-	Mental map robot- a robot that creates a map of all enemies
+	DAKT- DAK Test, a testing robot
 
 	sources used:
 	http://mark.random-article.com/weber/java/robocode/	
