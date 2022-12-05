@@ -14,9 +14,6 @@
 
 
 
-//TODO
-//get target coords
-//get targed dx, dy
 
 
 
@@ -55,7 +52,8 @@ public class DAKT extends AdvancedRobot
 
 	
 	double fa=0;
-	
+	double nextX;
+	double nextY;
 	
 	// double width=getBattleFieldWidth();
 	// double height=getBattleFieldHeight();
@@ -67,7 +65,6 @@ public class DAKT extends AdvancedRobot
 	
 	public DAKT(){
 		enemyMap = new LinkedHashMap<String, RobotData>(5, 2, true);
-
 
 	}
 	
@@ -103,6 +100,13 @@ public class DAKT extends AdvancedRobot
 		}	
 	
 	
+		    g.setColor(java.awt.Color.BLUE);
+	
+			g.drawLine((int)(getX()), (int)(getY()), (int)(getX()+1000*Math.sin(getHeadingRadians())), (int)(getY()+1000*Math.cos(getHeadingRadians())));	
+			
+			
+			g.setColor(new Color(0xff, 0x77, 0x00, 0x50));
+			g.fillOval((int)nextX - 20, (int)nextY-20, 40, 40);
 	}
 
 
@@ -130,20 +134,27 @@ public class DAKT extends AdvancedRobot
 		setColors(body, gun, radar, bullet, arc); // body,gun,radar
 
 		
+		
+		
+		nextX=getX();
+		nextY=getY();
 		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 		while(true) {
 			// System.out.println()
 	
-			 // turnRadarRightRadians(Math.PI*2);
 			if(enemyMap.isEmpty())
 				turnGunRight(5);
 			
 			
-			
-			
 			for (RobotData robot : enemyMap.values()) {
+			
+			// Iterator<Map.Entry<String, RobotData>> it = enemyMap.entrySet().iterator();
+			// while(it.hasNext()){
+			// RobotData robot = it.next().getValue();
+			
+				System.out.println("updated: "+robot.name);
 				
-				
+				robot.predictNextCoords();
 				
 				if(robot.hasFired()){
 				
@@ -156,29 +167,33 @@ public class DAKT extends AdvancedRobot
 					
 					
 					//make sure we dont go into a wall
-					double nextX=getX()+Math.cos(heading)*100;
-					double nextY=getY()+Math.sin(heading)*100;
+					nextX=getX()+Math.sin(heading)*100;
+					nextY=getY()+Math.cos(heading)*100;
+					int distanceFromWall=30;
+					if(nextX<distanceFromWall || nextY<distanceFromWall || nextX>getBattleFieldWidth()-distanceFromWall || nextY>getBattleFieldHeight()-distanceFromWall){
+						back(100);
 					
-					// if(nextX<0 || nextY<0 || nextX>getBattleFieldWidth() || nextY>getBattleFieldHeight())
-					// 	back(100);
-					// else
-					// 	ahead(100);
+						System.out.println("going back");
+					}else{
+						ahead(100);
+						System.out.println("going ahead");					
+					}
+					
+					
 					
 				}
 				
 				
 				
 				
-				robot.predictNextCoords();
 
-				// double angle=((getHeadingRadians()+robot.bearing-getGunHeadingRadians()));
-				double angle=aimAngle(robot, 10000);
+				double angle=aimAngle(robot, Rules.getBulletSpeed(1));
 				fa=angle;
 				angle-=getGunHeadingRadians();
 				
 				angle=Utils.normalRelativeAngle(angle);
-				System.out.println(robot.x);
-				System.out.println("=================");
+				// System.out.println(Rules.getBulletSpeed(1));
+				// System.out.println("=================");
 								
 				
 				if(angle<Math.PI)
@@ -188,9 +203,8 @@ public class DAKT extends AdvancedRobot
 				
 				robot.predictNextCoords();
 				
-				// fire(1);
+				fire(1);
 								
-				// fa=getHeadingRadians() - getGunHeadingRadians() + robot.bearing;//aimAngle(robot,1000);				
 				
 				
 				
@@ -207,9 +221,9 @@ public class DAKT extends AdvancedRobot
 	 * onScannedRobot: What to do when you see another robot
 	 */
 	public void onScannedRobot(ScannedRobotEvent e) {
-	
 		String name=e.getName();
 		
+		System.out.println("scanned: "+name);
 		RobotData robot=enemyMap.get(name);
 		
 		
@@ -220,16 +234,29 @@ public class DAKT extends AdvancedRobot
 		}else//if it is in our map, update its info
 			robot.update(e);
 		
-
-		// setTurnGunRight(getHeading() - getGunHeading() + e.getBearing());	
 	}
 
 
 	
 	//remove dead robots from our mental map
 	public void onRobotDeath(RobotDeathEvent e) {
+	
+		System.out.println("removed: "+e.getName());
 		enemyMap.remove(e.getName());
 	}
+
+
+
+
+	public void onBulletHit(BulletHitEvent bhe){
+		//set the robot with the name we hit to "hit" since we just hit it
+		RobotData robot= enemyMap.get(bhe.getName());
+		
+		if(!(robot==null))//if the robot didnt die with this hit
+			robot.gotHit=true;	
+	
+	}
+
 
 
 
@@ -267,10 +294,9 @@ public class DAKT extends AdvancedRobot
 	
 	
 	    double rCrossV = targetx * targetdy - targety * targetdx;
-	    double magR = Math.sqrt(targetx*targetx + targety*targety);
-	    double angleAdjust = Math.asin(rCrossV / (bulletSpeed * magR));
-
-	    return angleAdjust + Math.atan2(targetx, targety);
+	    double distance = Math.sqrt(targetx*targetx + targety*targety);
+	    double angleAdjust = Math.asin(rCrossV / (bulletSpeed * distance));
+	    return -angleAdjust + Math.atan2(targetx, targety);
 	}
 
 	
@@ -328,6 +354,8 @@ public class DAKT extends AdvancedRobot
 		double xWhenFired;
 		double yWhenFired;
 		
+		boolean gotHit=false;
+
 		ScannedRobotEvent event;
 		
 		
@@ -360,14 +388,22 @@ public class DAKT extends AdvancedRobot
 			bodyAngle=robot.getHeadingRadians();
 			gunAngle=robot.getHeadingRadians();
 			velocity=robot.getVelocity();
-
+			
+			
+			
+			//if we didnt hit the robot
+			if(!gotHit){
 			//checks if the robot fired (lost 0-4 energy)
-			if(energy-robot.getEnergy()>0 && energy-robot.getEnergy()<4){
-				xWhenFired=x;
-				yWhenFired=y;
-				fired=true;
+				if(energy-robot.getEnergy()>0 && energy-robot.getEnergy()<4){
+					xWhenFired=x;
+					yWhenFired=y;
+					fired=true;
+				}
+			}else{
+				gotHit=false;
 			}
-
+				
+			
 			energy=robot.getEnergy();			
 		}
 		
