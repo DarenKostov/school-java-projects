@@ -7,7 +7,7 @@
 	http://mark.random-article.com/weber/java/robocode/	
 	https://www.reddit.com/r/gamedev/comments/16ceki/turret_aiming_formula/
 	https://stackoverflow.com/questions/1878907/how-can-i-find-the-smallest-difference-between-two-angles-around-a-point
-
+	https://www.geeksforgeeks.org/concurrenthashmap-in-java/
 	
 	
 */
@@ -26,8 +26,7 @@ import java.awt.Color;
 
 import java.lang.Math;
 
-
-
+import java.util.concurrent.*;
 
 
 import java.util.*;
@@ -47,7 +46,10 @@ public class DAKT extends AdvancedRobot
 {
 
 
-	final Map<String, RobotData> enemyMap;
+	final ConcurrentHashMap<String, RobotData> enemyMap;
+	
+	
+	
 
 
 	
@@ -64,7 +66,7 @@ public class DAKT extends AdvancedRobot
 	
 	
 	public DAKT(){
-		enemyMap = new LinkedHashMap<String, RobotData>(5, 2, true);
+		enemyMap = new ConcurrentHashMap<String, RobotData>();
 
 	}
 	
@@ -120,7 +122,7 @@ public class DAKT extends AdvancedRobot
 		// and the next line:
 
 
-
+		//make every part of the robot move independently
 		setAdjustRadarForGunTurn(true);
 		setAdjustGunForRobotTurn(true);
 
@@ -138,6 +140,7 @@ public class DAKT extends AdvancedRobot
 		
 		nextX=getX();
 		nextY=getY();
+		
 		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 		while(true) {
 			// System.out.println()
@@ -145,17 +148,20 @@ public class DAKT extends AdvancedRobot
 			if(enemyMap.isEmpty())
 				turnGunRight(5);
 			
+
 			
+			System.out.println("starting for loop");
 			for (RobotData robot : enemyMap.values()) {
 			
-			// Iterator<Map.Entry<String, RobotData>> it = enemyMap.entrySet().iterator();
-			// while(it.hasNext()){
-			// RobotData robot = it.next().getValue();
+				System.out.println("starting current loop");
 			
-				System.out.println("updated: "+robot.name);
+				System.out.println("updating: "+robot.name);
 				
 				robot.predictNextCoords();
-				
+
+				System.out.println("updated: "+robot.name);
+						
+					
 				if(robot.hasFired()){
 				
 
@@ -204,17 +210,16 @@ public class DAKT extends AdvancedRobot
 				robot.predictNextCoords();
 				
 				fire(1);
-								
-				
-				
-				
-				
-				
+										
 			
+			System.out.println("ending current loop");
+			
+			System.out.println("size of map: "+enemyMap.size());
+
 			}
-			
-			
+		System.out.println("ending for loop");
 		}
+		
 	}
 
 	/**
@@ -225,15 +230,16 @@ public class DAKT extends AdvancedRobot
 		
 		System.out.println("scanned: "+name);
 		RobotData robot=enemyMap.get(name);
-		
+		System.out.println("got data from: "+name);
 		
 		if(robot==null){//if robot isnt in our map, add it
 			robot = new RobotData(e);
 			enemyMap.put(name, robot);
-			
+			System.out.println("==added: "+name);
 		}else//if it is in our map, update its info
 			robot.update(e);
 		
+		System.out.println("stopped scanning: "+name);
 	}
 
 
