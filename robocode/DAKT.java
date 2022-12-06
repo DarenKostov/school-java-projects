@@ -48,6 +48,7 @@ public class DAKT extends AdvancedRobot
 
 	final ConcurrentHashMap<String, RobotData> enemyMap;
 	
+	RobotData currentTarget;	
 	
 	
 
@@ -143,6 +144,11 @@ public class DAKT extends AdvancedRobot
 		
 		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
 		while(true) {
+				
+			//reset target
+			currentTarget=null;
+		
+		
 			// System.out.println()
 	
 			if(enemyMap.isEmpty())
@@ -152,7 +158,16 @@ public class DAKT extends AdvancedRobot
 			
 			System.out.println("starting for loop");
 			for (RobotData robot : enemyMap.values()) {
-			
+				
+				//if there is no target, this is our target
+				if(currentTarget==null)
+					currentTarget=robot;
+					
+				//if this robot has lower health than our target, this is our target
+				
+				if(currentTarget.energy>robot.energy)
+					currentTarget=robot;
+				
 				System.out.println("starting current loop");
 			
 				System.out.println("updating: "+robot.name);
@@ -176,24 +191,29 @@ public class DAKT extends AdvancedRobot
 					nextX=getX()+Math.sin(heading)*100;
 					nextY=getY()+Math.cos(heading)*100;
 					int distanceFromWall=30;
+					//"set" because there can be multiple attackers and we dont wanna just dodge aimlessly all bullets
 					if(nextX<distanceFromWall || nextY<distanceFromWall || nextX>getBattleFieldWidth()-distanceFromWall || nextY>getBattleFieldHeight()-distanceFromWall){
-						back(100);
+						setBack(100);
 					
 						System.out.println("going back");
 					}else{
-						ahead(100);
+						setAhead(100);
 						System.out.println("going ahead");					
 					}
 					
 					
 					
 				}
+				//predict where the robot will be
+				robot.predictNextCoords();
 				
 				
-				
-				
+			}
+			
+			//aim and shoot if we have a target
+			if(currentTarget!=null){
 
-				double angle=aimAngle(robot, Rules.getBulletSpeed(1));
+				double angle=aimAngle(currentTarget, Rules.getBulletSpeed(1));
 				fa=angle;
 				angle-=getGunHeadingRadians();
 				
@@ -207,16 +227,14 @@ public class DAKT extends AdvancedRobot
 				else
 					turnGunLeftRadians(angle-Math.PI);
 				
-				robot.predictNextCoords();
 				
 				fire(1);
-										
-			
+			}							
+						
 			System.out.println("ending current loop");
 			
 			System.out.println("size of map: "+enemyMap.size());
 
-			}
 		System.out.println("ending for loop");
 		}
 		
