@@ -255,9 +255,9 @@ public class DAKT extends AdvancedRobot
 				
 				fire(1);
 				
-				// System.out.println(currentTarget.distance);
+				//disableling for now
 				//if we're far from the target, move closer to it
-				if(currentTarget.distance>200){
+				if(false/*currentTarget.distance<800*/){
 					// System.out.println(currentTarget.distance);
 					double moveAngle=aimAngle(currentTarget, Rules.MAX_VELOCITY);
 					fb=moveAngle;
