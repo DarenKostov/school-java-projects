@@ -236,8 +236,18 @@ public class DAKT extends AdvancedRobot
 			}
 			//aim and shoot if we have a target (and also move closer to it)
 			if(currentTarget!=null){
-
-				double shootAngle=aimAngle(currentTarget, Rules.getBulletSpeed(1));
+			
+				int bulletPower=1;
+				
+				
+				if(currentTarget.distance<300){
+					bulletPower++;
+				}
+				if(currentTarget.distance<100){
+					bulletPower++;
+				}
+				
+				double shootAngle=aimAngle(currentTarget, Rules.getBulletSpeed(bulletPower));
 				fa=shootAngle;
 				shootAngle-=getGunHeadingRadians();
 				
@@ -253,7 +263,7 @@ public class DAKT extends AdvancedRobot
 				else
 					turnGunLeftRadians(shootAngle-Math.PI);
 				
-				fire(1);
+				fire(bulletPower);
 				
 				//disableling for now
 				//if we're far from the target, move closer to it
