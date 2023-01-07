@@ -239,7 +239,7 @@ public class DAKT extends AdvancedRobot
 			
 				int bulletPower=1;
 				
-				
+				//if the enemy is close, shoot and shoot hard
 				if(currentTarget.distance<300){
 					bulletPower++;
 				}
@@ -396,7 +396,6 @@ public class DAKT extends AdvancedRobot
 		
 			
 	//class that stores robot data
-	//TODO find a way to get the robots gun & radar angles
 	class RobotData{
 		final String name;		
 		//coords
