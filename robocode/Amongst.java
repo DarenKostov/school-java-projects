@@ -12,7 +12,7 @@ import java.awt.BasicStroke;
 /*
 Daren Kostov
 Amongst- a bot that.... it just shoots and rams into a target
-
+the bot is amongst the.... other bots? 
 
 */
 
@@ -58,9 +58,9 @@ public class Amongst extends AdvancedRobot {
         //set the color    
 		Color body=new Color(0, 0, 0);
 		Color gun=new Color(0, 0, 0);
-		Color radar=new Color(119, 255, 119);
-		Color bullet=new Color(119, 255, 119);
-		Color arc=new Color(119, 255, 119);
+		Color radar=new Color(255, 204, 119);
+		Color bullet=new Color(255, 204, 119);
+		Color arc=new Color(255, 204, 119);
         setColors(body, gun, radar, bullet, arc);
 
 		//make every part of the robot move independently
@@ -117,8 +117,39 @@ public class Amongst extends AdvancedRobot {
         setTurnRadarRightRadians(direction*Math.PI*2);  
 
 
+        //are we about to die before the target?
+        if(getEnergy()+70<target.getEnergy()){
+            //calc out next position
+            double myNextRotation=getHeadingRadians()+target.getBearingRadians()+Math.PI;
+            double myNextX=getX()+Math.sin(myNextRotation)*100;
+            double myNextY=getY()+Math.cos(myNextRotation)*100;
         
 
+            
+            
+            //we don't hit a wall right?
+			int distanceFromWall=100;
+            if(myNextX>distanceFromWall && myNextY>distanceFromWall && myNextX<getBattleFieldWidth()-distanceFromWall && myNextY<getBattleFieldHeight()-distanceFromWall)
+                setTurnRightRadians(target.getBearingRadians()+Math.PI);
+            
+            //we do?
+            else{
+                //recalculate position in other direction
+                myNextRotation=getHeadingRadians()+target.getBearingRadians()-Math.PI;
+                myNextX=getX()+Math.sin(myNextRotation)*100;
+                myNextY=getY()+Math.cos(myNextRotation)*100;
+                // if we go the other direction we wont hit a wall again right?
+                if(myNextX>distanceFromWall && myNextY>distanceFromWall && myNextX<getBattleFieldWidth()-distanceFromWall && myNextY<getBattleFieldHeight()-distanceFromWall)
+                    setTurnRightRadians(target.getBearingRadians()-Math.PI);
+                //we hit a wall again?
+                else{
+                    //we are most likely at a corner so no need to try to do 180 (we'll hit a a wall again)
+                    //so lets just crank up the speed (if it wasnt already)
+                	setMaxVelocity(Rules.MAX_VELOCITY);
+                    setAhead(200);
+                }
+            }
+        }   
           
         execute();
 
