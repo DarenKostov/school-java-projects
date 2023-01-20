@@ -259,9 +259,9 @@ public class DAKT extends AdvancedRobot
 				//no "set" because we want to turn the gun in that direction before we shoot
 				//this also executes all previous actions
 				if(shootAngle<Math.PI)
-					turnGunRightRadians(shootAngle);
+					setTurnGunRightRadians(shootAngle);
 				else
-					turnGunLeftRadians(shootAngle-Math.PI);
+					setTurnGunLeftRadians(shootAngle-Math.PI);
 				
 				fire(bulletPower);
 				

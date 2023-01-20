@@ -32,6 +32,7 @@ public class Amongst extends AdvancedRobot {
     double nextX=0;
     double nextY=0;
 
+    long colorFrame=0;
 
 
 	public void onPaint(Graphics2D g) {
@@ -54,14 +55,16 @@ public class Amongst extends AdvancedRobot {
 
 
     public void run() {
-        
-        //set the color    
-		Color body=new Color(0, 0, 0);
-		Color gun=new Color(0, 0, 0);
-		Color radar=new Color(255, 204, 119);
-		Color bullet=new Color(255, 204, 119);
-		Color arc=new Color(255, 204, 119);
-        setColors(body, gun, radar, bullet, arc);
+
+        {
+            //set the color    
+    		Color body=new Color(0, 0, 0);
+    		Color gun=new Color(0, 0, 0);
+    		Color radar=new Color(255, 204, 119);
+    		Color bullet=new Color(255, 204, 119);
+    		Color arc=new Color(255, 204, 119);
+            setColors(body, gun, radar, bullet, arc);
+        }
 
 		//make every part of the robot move independently
 		setAdjustRadarForGunTurn(true);
@@ -78,6 +81,20 @@ public class Amongst extends AdvancedRobot {
 
 
     public void onScannedRobot(ScannedRobotEvent target) {
+
+
+            colorFrame++;
+    		Color body=new Color(0, 0, 0);
+
+            double colorPhase=(Math.sin(colorFrame/2)+1)/2;
+
+            
+    		Color accent=new Color((int)map(colorPhase, 1, 0, 255, 0), (int)map(colorPhase, 1, 0, 0, 255), (int)map(colorPhase, 1, 0, 0, 119));
+
+            
+            setColors(body, body, accent, accent, accent);
+
+            // System.out.println((int)Math.max(1,(Math.sin(colorPhase)*204)));
         //=calc bullet power
 
         int bulletPower=1;
@@ -168,8 +185,10 @@ public class Amongst extends AdvancedRobot {
 	    return -angleAdjust + Math.atan2(targetx, targety);
 	}
 
-
-
+    double map(double n, double start1, double stop1, double start2, double stop2){
+        return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
+    }
+    
 
 
 }
