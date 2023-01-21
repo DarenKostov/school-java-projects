@@ -32,8 +32,10 @@ public class Amongst extends AdvancedRobot {
     double nextX=0;
     double nextY=0;
 
-    long colorFrame=0;
+    long frame=0;
 
+    double damageD=0;
+    double energy=0;
 
 	public void onPaint(Graphics2D g) {
 
@@ -82,19 +84,32 @@ public class Amongst extends AdvancedRobot {
 
     public void onScannedRobot(ScannedRobotEvent target) {
 
+        frame++;
 
-            colorFrame++;
-    		Color body=new Color(0, 0, 0);
 
-            double colorPhase=(Math.sin(colorFrame/2)+1)/2;
+        damageD=Math.min(4,damageD+Math.max(0,energy-getEnergy()));
 
-            
-    		Color accent=new Color((int)map(colorPhase, 1, 0, 255, 0), (int)map(colorPhase, 1, 0, 0, 255), (int)map(colorPhase, 1, 0, 0, 119));
+        energy=getEnergy();
 
-            
-            setColors(body, body, accent, accent, accent);
 
-            // System.out.println((int)Math.max(1,(Math.sin(colorPhase)*204)));
+        damageD*=0.9;
+
+        
+        //=color stuff
+
+
+        Color color1=new Color(50, 255, 50);
+        Color color2=new Color(255, 50, 50);
+
+        
+        //from which clor to which color
+        Color body=new Color(0, 0, 0);
+        // Color accent=new Color((int)map(colorPhase, 1, 0, 255, 255), (int)map(colorPhase, 1, 0, 204, 0), (int)map(colorPhase, 1, 0, 0, 0));
+        Color arc=colorRamp(0.2, color1, color2);
+        Color radar=colorRamp(0, map(damageD, 3, 1, 0, 1), color1, color2);
+        setColors(body, body, radar, arc, arc);
+        
+
         //=calc bullet power
 
         int bulletPower=1;
@@ -177,6 +192,23 @@ public class Amongst extends AdvancedRobot {
     }
 
 
+    public void onWin(WinEvent event){
+        while(true){
+            System.out.println("win event");
+            frame++;
+            Color color2=new Color(255, 0, 0);
+            Color color1=new Color(0, 255, 0);
+            Color color3=new Color(0, 0, 255);
+            Color all=colorRamp(Math.PI/4, color1, color2);
+            setColors(all, all, all, all, all);
+            doNothing();
+        }
+    
+    
+    }
+
+
+
     //calculates where the barrel should be given the target parameters and bullet speed
 	double aimAngle(double targetx, double targety, double targetdx, double targetdy, double bulletSpeed) {
 	    double rCrossV = targetx * targetdy - targety * targetdx;
@@ -188,9 +220,30 @@ public class Amongst extends AdvancedRobot {
     double map(double n, double start1, double stop1, double start2, double stop2){
         return ((n-start1)/(stop1-start1))*(stop2-start2)+start2;
     }
+
+    Color colorRamp(double speed, double pos, Color color1, Color color2){
+
+        int c1r=color1.getRed();
+        int c1g=color1.getGreen();
+        int c1b=color1.getBlue();
+        int c2r=color2.getRed();
+        int c2g=color2.getGreen();
+        int c2b=color2.getBlue();
+
+        
+        return new Color(
+        (int)Math.max(0, Math.min(255, map(pos, 1, 0, c1r, c2r))),
+        (int)Math.max(0, Math.min(255, map(pos, 1, 0, c1g, c2g))),
+        (int)Math.max(0, Math.min(255, map(pos, 1, 0, c1b, c1b)))
+        );
+    
+    }
     
 
-
+    Color colorRamp(double speed, Color color1, Color color2){
+        double position=(Math.sin(1.0*frame*speed)+1)/2;
+        return colorRamp(0, position, color1, color2);
+    }
 }
 
 
