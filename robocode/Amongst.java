@@ -88,7 +88,6 @@ public class Amongst extends TeamRobot {
             return;
         }
         System.out.println("enemy");
-        System.out.println(getTeammates());
 
             
         frame++;
@@ -196,6 +195,16 @@ public class Amongst extends TeamRobot {
         //Shoot! at the end because we still havent rotated the barrel
         setFire(bulletPower);
         
+    }
+
+
+     
+
+    public void HitRobotEvent(String name, double bearing, double energy, boolean atFault){
+    
+        if(isTeammate(name))
+            back(200);
+
     }
 
 
