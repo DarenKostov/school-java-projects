@@ -1,4 +1,4 @@
-package dk;
+package teamNu;
 import robocode.*;
 import robocode.util.Utils;
 import java.awt.Color;
@@ -22,7 +22,7 @@ sources:
     https://gist.github.com/rogerluan/d62a26039d9bcb9395f5d391fb1a17ae
 */
 
-public class Amongst extends AdvancedRobot {
+public class Amongst extends TeamRobot {
 
     int direction=1;
 
@@ -83,7 +83,14 @@ public class Amongst extends AdvancedRobot {
 
 
     public void onScannedRobot(ScannedRobotEvent target) {
+        if(isTeammate(target.getName())){
+            System.out.println("teamate!!!!");
+            return;
+        }
+        System.out.println("enemy");
+        System.out.println(getTeammates());
 
+            
         frame++;
 
 
