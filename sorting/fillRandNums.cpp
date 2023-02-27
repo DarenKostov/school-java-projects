@@ -4,10 +4,10 @@ using namespace std;
 
 int main(){
 
-  ofstream file("data-1mil.txt");
+  ofstream file("100nums.txt");
 
-  for(int i=0; i<1000000; i++){
-    file << rand()%9999 << ", ";
+  for(int i=0; i<100; i++){
+    file << rand()%1000 << " ";
   }
   
 }
