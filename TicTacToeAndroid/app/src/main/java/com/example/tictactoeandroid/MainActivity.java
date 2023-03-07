@@ -1,3 +1,18 @@
+/*
+    Daren Kostov
+
+    Tic tac toe
+    player is X, computre is O
+    
+    sources used when writing this game:
+    https://developer.okta.com/blog/2018/08/10/basic-android-without-an-ide
+    https://developer.android.com/studio/run/emulator-commandline
+
+    last edited: 3/7/2023 
+
+
+*/
+
 package com.example.tictactoeandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,7 +27,7 @@ import android.widget.Toast;
 
 
 //why is the default an error and not a warning?
-@SuppressWarnings("SuspiciousIndentation")
+// @SuppressWarnings("SuspiciousIndentation")
 
 public class MainActivity extends AppCompatActivity implements OnClickListener{
 
@@ -56,20 +71,24 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
 
 
     //check who won and anounces the winner if anyoone has won
-    public void checkWhoWon(){
+    public boolean checkWhoWon(){
         if(winning()){
             Toast.makeText(this, turn+" has won!", Toast.LENGTH_SHORT).show();
             resetBoard();
             turn='O';
             AIMove();
             turn='X';
+            return true;
         }else if(full()){
             Toast.makeText(this, "Nobody has won!", Toast.LENGTH_SHORT).show();
             resetBoard();
             turn='O';
             AIMove();
             turn='X';
+            return true;
         }
+
+        return false;
     }
 
 
@@ -85,12 +104,18 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
                         b.setEnabled(false);
                         b.setText("X");
                         board[x][y]='X';
-                        checkWhoWon();
+
+                        //X won? don't play ai's turn!
+                        if(checkWhoWon())
+                            return;
+
+                        
                                                 
                         //ai's turn
                         turn='O';
                         AIMove();
                         checkWhoWon();
+                        // return;
 
                         //it's out turn
                         turn='X';
@@ -119,7 +144,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener{
         //play randomly
         // if(false)
 
-        //we don't want this to run forever in the small chance that we never get a valid position
+        // return;
+        
+        // while(true){
+            // break;
+        // }
+
+
+        //we don't want this to run forever in the small chance that we never ever get a valid position
         int count=0;
         while(count++<100000){
             int x=genRand(), y=genRand();
