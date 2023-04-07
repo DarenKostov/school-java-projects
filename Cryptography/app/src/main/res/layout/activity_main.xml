@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <EditText
+        android:id="@+id/input"
+        android:text="input"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+    <EditText
+        android:id="@+id/second_input"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+
+    <Button
+    		android:id="@+id/encrypt"
+    		android:text="encrypt"
+
+    		android:layout_width="wrap_content"
+    	 	android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+
+    <Button
+    		android:id="@+id/decrypt"
+    		android:text="decrypt"
+
+    		android:layout_width="wrap_content"
+    	 	android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+
+    <TextView
+        android:id="@+id/output"
+        android:text="output"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+
+    <Button
+    		android:id="@+id/scytale"
+    		android:text="Scytale Cipher"
+
+    		android:layout_width="wrap_content"
+    	 	android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+    <Button
+    		android:id="@+id/caesar"
+    		android:text="Caesar Cipher"
+
+    		android:layout_width="wrap_content"
+    	 	android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+    <Button
+    		android:id="@+id/vigenere"
+    		android:text="Vigenere Cipher"
+
+    		android:layout_width="wrap_content"
+    	 	android:layout_height="wrap_content"
+        android:textSize="24sp"
+    />
+
+
+
+
+</LinearLayout>
+
+
