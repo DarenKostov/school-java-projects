@@ -86,9 +86,6 @@ class Traffic implements ActionListener, Runnable{
         frame.setVisible(true);
 
         
-        Vehicle daCar2=new Semi(200, 300);
-        road.add(daCar2);
-        
     }
 
 

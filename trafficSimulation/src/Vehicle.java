@@ -55,7 +55,6 @@ class Vehicle{
   public void calculateFuture(Vehicle outsideVehicle){
 
 
-    System.out.println(nextX+"; " +nextY);
 
     //have we calculated our future in this step before?
     if(didWeCalculateTheFuture==false){
@@ -71,7 +70,7 @@ class Vehicle{
     }
 
 
-    if(areWeColliding(outsideVehicle)){
+    if(areTheyInFront(outsideVehicle)){
       nextX=x;
       nextY=y;
       speed=0;
@@ -93,8 +92,6 @@ class Vehicle{
       nextX=0;
     }
 
-    System.out.println(x+", " +y);
-    System.out.println(speed+"==");
   }
 
   //gets where the vehicle should be in the next step
@@ -107,7 +104,7 @@ class Vehicle{
 
 
   //are we colliding with a vehicle
-  private boolean areWeColliding(Vehicle vehicle1){
+  public boolean areWeColliding(Vehicle vehicle1){
 
     Vehicle vehicle2=this;
   
@@ -128,6 +125,29 @@ class Vehicle{
 
     return false;
   
+  }
+
+
+  private boolean areTheyInFront(Vehicle vehicle1){
+  
+    Vehicle vehicle2=this;
+  
+    //why are we checking if we are colliding with ourselves?
+    if(vehicle1==vehicle2){
+      return false;
+    }
+    
+    if (vehicle2.getX()+vehicle2.getWidth() <= vehicle1.getX() + vehicle1.getWidth()) {
+      if (vehicle1.getX() <= vehicle2.getX() + vehicle2.getWidth()*2) {
+        if (vehicle2.getY() <= vehicle1.getY() + vehicle1.getHeight()) {
+          if (vehicle1.getY() <= vehicle2.getY() + vehicle2.getHeight()) {
+            return true;
+          }
+        }
+      }
+    }
+  
+    return false;
   }
 
   public void draw(Graphics g){
