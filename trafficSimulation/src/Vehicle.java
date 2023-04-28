@@ -20,8 +20,8 @@ class Vehicle{
   float speed;
   float maxSpeed;
 
-  int nextX;
-  int nextY;
+  double nextX;
+  double nextY;
 
   boolean didWeCalculateTheFuture;
 
@@ -55,10 +55,7 @@ class Vehicle{
   public void calculateFuture(Vehicle outsideVehicle){
 
 
-    //we are not an "outside vehicle"
-    if(outsideVehicle==this){
-      return;
-    }
+    System.out.println(nextX+"; " +nextY);
 
     //have we calculated our future in this step before?
     if(didWeCalculateTheFuture==false){
@@ -66,6 +63,13 @@ class Vehicle{
       nextX+=speed;
       nextY+=0;
     }
+
+
+    //we are not an "outside vehicle"
+    if(outsideVehicle==this){
+      return;
+    }
+
 
     if(areWeColliding(outsideVehicle)){
       nextX=x;
@@ -78,8 +82,8 @@ class Vehicle{
 
   //updates the vehicles position according to its calculated future
   public void update(){
-    x=nextX;
-    y=nextY;
+    x=(int)nextX;
+    y=(int)nextY;
     speed=Math.min(maxSpeed, speed+accelaration);
     didWeCalculateTheFuture=false;
 
@@ -88,6 +92,9 @@ class Vehicle{
       x=0;
       nextX=0;
     }
+
+    System.out.println(x+", " +y);
+    System.out.println(speed+"==");
   }
 
   //gets where the vehicle should be in the next step

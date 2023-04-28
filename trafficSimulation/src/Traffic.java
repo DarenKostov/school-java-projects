@@ -106,6 +106,17 @@ class Traffic implements ActionListener, Runnable{
         if(event.getSource().equals(stop)){
             running=false;
         }
+
+        //are we adding a semi?
+        for(int i=0; i<4; i++){
+            if(event.getSource().equals(addSemi[i])){
+                Vehicle car=new Semi(200, 175*i+70);
+                road.add(car);
+                frame.repaint();
+            }
+        }
+
+        
     }
 
     @Override
