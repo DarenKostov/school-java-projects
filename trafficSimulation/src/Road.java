@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.JPanel;
+import java.util.*;
 
 class Road extends JPanel{
 
@@ -12,6 +13,12 @@ class Road extends JPanel{
 
   final int lanes=4;
   final int laneSegments=20;
+
+
+  ArrayList<Vehicle> cars= new ArrayList<Vehicle>();
+
+
+
   
   public Road(){
     super();
@@ -20,6 +27,10 @@ class Road extends JPanel{
     laneSpacingVertically=700/(lanes);
     laneSpacingHorizontaly=1300/laneSegments;    
       
+  }
+
+  public void add(Vehicle in){
+    cars.add(in);
   }
 
 
@@ -36,6 +47,10 @@ class Road extends JPanel{
         g.fillRect(j*laneSpacingHorizontaly, i*laneSpacingVertically+laneSpacingVertically, laneWidth, laneHeight);
     
       }
+    }
+
+    for(Vehicle car : cars){
+      car.draw(g);
     }
     
 

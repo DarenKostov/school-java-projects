@@ -17,7 +17,9 @@ class Traffic{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
+        Vehicle daCar=new Vehicle(100, 100);
 
+        road.add(daCar);
         
         
     }
