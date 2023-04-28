@@ -34,6 +34,25 @@ class Road extends JPanel{
   }
 
 
+  public void update(){
+
+
+    //get where the car should be
+    for(Vehicle car1 : cars){
+      for(Vehicle car2 : cars){
+        car1.calculateFuture(car2);
+      }
+    }
+
+
+    //update the cars coordinates
+    for(Vehicle car : cars){
+      car.update();
+    }
+    
+  }
+  
+
   public void paintComponent(Graphics g){
     super.paintComponent(g);
 
@@ -42,7 +61,7 @@ class Road extends JPanel{
 
 
     g.setColor(Color.WHITE);
-    for(int i=0; i<lanes; i++){
+    for(int i=0; i<lanes-1; i++){
       for(int j=0; j<laneSegments; j++){
         g.fillRect(j*laneSpacingHorizontaly, i*laneSpacingVertically+laneSpacingVertically, laneWidth, laneHeight);
     
@@ -52,8 +71,6 @@ class Road extends JPanel{
     for(Vehicle car : cars){
       car.draw(g);
     }
-    
-
     
   }
   

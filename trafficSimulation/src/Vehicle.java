@@ -15,9 +15,10 @@ class Vehicle{
   int y;
   int width;
   int height;
-  int accelaration;
-  int speed;
-  int maxSpeed;
+
+  float accelaration;
+  float speed;
+  float maxSpeed;
 
   int nextX;
   int nextY;
@@ -28,10 +29,10 @@ class Vehicle{
     this.x=x;
     this.y=y;
     this.didWeCalculateTheFuture=false;
-
-    height=100;
-    width=200;
-    
+    speed=0;
+      
+    nextX=x;
+    nextY=y;
   }  
 
 
@@ -63,7 +64,7 @@ class Vehicle{
     if(didWeCalculateTheFuture==false){
       didWeCalculateTheFuture=true;
       nextX+=speed;
-      nextY+=speed;
+      nextY+=0;
     }
 
     if(areWeColliding(outsideVehicle)){
@@ -80,8 +81,13 @@ class Vehicle{
     x=nextX;
     y=nextY;
     speed=Math.min(maxSpeed, speed+accelaration);
+    didWeCalculateTheFuture=false;
 
-    
+
+    if(x>1300){
+      x=0;
+      nextX=0;
+    }
   }
 
   //gets where the vehicle should be in the next step
