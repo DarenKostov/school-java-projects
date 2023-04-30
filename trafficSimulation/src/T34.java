@@ -3,6 +3,8 @@
   Daren Kostov
 
   a T34 tank class, like vehicle but more specific
+  It should be noted that this vehicle can and most likely
+  will become extremly fast 
 
 */
 import java.awt.Graphics;
@@ -36,7 +38,7 @@ class T34 extends Vehicle{
   }
 
 
-  //we only go forward (unless theres a tank infront of us)
+  //we only go forward (unless theres a tank infront of us that is not significaly slower than us)
   public void calculateFuture(Vehicle outsideVehicle){
 
     //have we calculated our future in this step before?
