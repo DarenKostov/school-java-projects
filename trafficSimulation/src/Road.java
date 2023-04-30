@@ -1,7 +1,8 @@
 import java.awt.Graphics;
 import java.awt.Color;
 import javax.swing.JPanel;
-import java.util.*;
+// import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 class Road extends JPanel{
 
@@ -15,7 +16,7 @@ class Road extends JPanel{
   final int laneSegments=20;
 
 
-  ArrayList<Vehicle> cars= new ArrayList<Vehicle>();
+  ConcurrentLinkedQueue<Vehicle> cars= new ConcurrentLinkedQueue<Vehicle>();
 
 
 
