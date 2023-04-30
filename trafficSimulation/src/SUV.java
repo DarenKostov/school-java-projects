@@ -6,7 +6,8 @@
 
 */
 import java.awt.Graphics;
-import java.awt.Color;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 class SUV extends Vehicle{
 
@@ -19,12 +20,17 @@ class SUV extends Vehicle{
     maxSpeed=10;
     accelaration=0.05f;
 
+    try{
+      vehicleImage=ImageIO.read(new File("suv.png"));
+    }catch(Exception ex){
+      ex.printStackTrace();
+    }
+
+
   }
   
   public void draw(Graphics g){
     super.draw(g);
-    g.setColor(Color.MAGENTA);
-    g.fillRect(x, y, width, height);
   }
 
 

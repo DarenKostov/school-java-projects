@@ -85,7 +85,7 @@ class Road extends JPanel{
   public void paintComponent(Graphics g){
     super.paintComponent(g);
 
-    g.setColor(Color.BLACK);
+    g.setColor(Color.DARK_GRAY);
     g.fillRect(0, 0, getWidth(), getHeight());
 
 

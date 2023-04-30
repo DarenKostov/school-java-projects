@@ -7,7 +7,7 @@
 
 import java.awt.Graphics;
 import java.awt.Color;
-
+import java.awt.Image;
 
 class Vehicle{
 
@@ -33,6 +33,9 @@ class Vehicle{
   Box leftBox=new Box();
   Box rightBox=new Box();
 
+  Image vehicleImage;
+
+  
   public Vehicle(int x, int y){
     this.x=x;
     this.y=y;
@@ -375,6 +378,9 @@ class Vehicle{
     frontBox.x-=1300;
     leftBox.x-=1300;
     rightBox.x-=1300;
+
+    g.drawImage(vehicleImage, x, y, width, height, null);
+
     
   }
 
@@ -405,7 +411,7 @@ class Vehicle{
     }
 
     public void draw(Graphics g){
-      g.setColor(new Color(255, 0, 0, 50));
+      g.setColor(new Color(255, 0, 0, 25));
       g.fillRect(x, y, w, h);
     }
     

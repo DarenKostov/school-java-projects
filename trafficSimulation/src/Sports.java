@@ -6,7 +6,8 @@
 
 */
 import java.awt.Graphics;
-import java.awt.Color;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 class Sports extends Vehicle{
 
@@ -19,12 +20,17 @@ class Sports extends Vehicle{
     maxSpeed=8;
     accelaration=0.1f;
 
+    try{
+      vehicleImage=ImageIO.read(new File("sports.png"));
+    }catch(Exception ex){
+      ex.printStackTrace();
+    }
+
+
   }
   
   public void draw(Graphics g){
     super.draw(g);
-    g.setColor(Color.RED);
-    g.fillRect(x, y, width, height);
   }
 
 

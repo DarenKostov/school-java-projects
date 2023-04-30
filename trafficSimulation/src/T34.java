@@ -6,8 +6,9 @@
 
 */
 import java.awt.Graphics;
-import java.awt.Color;
 import java.util.*;
+import javax.imageio.ImageIO;
+import java.io.File;
 
 class T34 extends Vehicle{
 
@@ -18,11 +19,20 @@ class T34 extends Vehicle{
   public T34(int x, int y){
     super(x, y);
 
+    //yes, this tank is way, way too big
     width=170;
     height=120;
 
     maxSpeed=5;
     accelaration=1f;
+
+
+    try{
+      vehicleImage=ImageIO.read(new File("t34.png"));
+    }catch(Exception ex){
+      ex.printStackTrace();
+    }
+    
   }
 
 
@@ -80,8 +90,7 @@ class T34 extends Vehicle{
 
   public void draw(Graphics g){
     super.draw(g);
-    g.setColor(Color.GREEN);
-    g.fillRect(x, y, width, height);
+    // g.drawImage(vehicleImage, x, y, width, height, null);
   }
 
 
