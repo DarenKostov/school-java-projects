@@ -114,7 +114,7 @@ class Traffic implements ActionListener, Runnable{
         }
 
         
-        //are we adding a semi?
+        //are we adding a SUV?
         for(int i=0; i<4; i++){
             if(event.getSource().equals(addSUV[i])){
                 Vehicle car=new SUV(200, 175*i+70);
@@ -122,6 +122,29 @@ class Traffic implements ActionListener, Runnable{
                 frame.repaint();
             }
         }
+
+
+        //are we adding a sports car?
+        for(int i=0; i<4; i++){
+            if(event.getSource().equals(addSports[i])){
+                Vehicle car=new Sports(200, 175*i+70);
+                road.add(car);
+                frame.repaint();
+            }
+        }
+
+
+
+        //are we adding a T34?
+        for(int i=0; i<4; i++){
+            if(event.getSource().equals(addT34[i])){
+                Vehicle car=new T34(200, 175*i+70);
+                road.add(car);
+                frame.repaint();
+            }
+        }
+        
+        
     }
 
     @Override

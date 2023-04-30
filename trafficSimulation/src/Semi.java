@@ -16,7 +16,7 @@ class Semi extends Vehicle{
     width=120;
     height=40;
 
-    maxSpeed=10;
+    maxSpeed=7;
     accelaration=0.1f;
 
   }

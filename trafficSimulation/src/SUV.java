@@ -13,10 +13,10 @@ class SUV extends Vehicle{
   public SUV(int x, int y){
     super(x, y);
 
-    width=220;
-    height=60;
+    width=60;
+    height=30;
 
-    maxSpeed=7;
+    maxSpeed=10;
     accelaration=0.05f;
 
   }

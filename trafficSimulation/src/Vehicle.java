@@ -176,12 +176,41 @@ class Vehicle{
     dy*=drag;
     didWeCalculateTheFuture=false;
 
-
+    //wrap
     if(x>1300){
       x=0;
       nextX=0;
     }
 
+
+    //dont go off the screen
+    if(y<10){
+      y=10;
+    }else if(y>690-width){
+      y=690-width;
+    }
+    
+
+
+    //not moving on the Y? lets fix our Y coordinate then
+    if(dy<0.1 && dy>-0.1){
+
+      //get our lane
+      int lane=(int)Math.floor(y/175);
+
+      System.out.println(lane);
+      
+      //get target y coordinate
+      int target=lane*175+175/2;
+
+      target-=width/3;
+      
+      y=target;
+
+
+      
+    }
+    
   }
 
   //gets where the vehicle should be in the next step
@@ -236,7 +265,7 @@ class Vehicle{
 
 
   //tells us if the vehicle is in front of us
-  private boolean areTheyInFront(Vehicle vehicle){
+  public boolean areTheyInFront(Vehicle vehicle){
   
     //why are we checking if we are colliding with ourselves right?
     if(this==vehicle){

@@ -33,7 +33,7 @@ class Road extends JPanel{
 
     for(Vehicle car : cars){
       //reject requiest to add if there are collisions
-      if(car.areWeColliding(in)){
+      if(car.areWeColliding(in) || car.areTheyInFront(in)){
         return;
       }
     }
