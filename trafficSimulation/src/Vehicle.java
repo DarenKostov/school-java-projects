@@ -33,7 +33,6 @@ class Vehicle{
   Box leftBox=new Box();
   Box rightBox=new Box();
 
-
   public Vehicle(int x, int y){
     this.x=x;
     this.y=y;
@@ -83,15 +82,15 @@ class Vehicle{
 
     if(areTheyInFront(outsideVehicle)){
       someoneAtFront=true;
-      System.out.println("front");
+      // System.out.println("front");
     }
     if(areTheyOnTheLeft(outsideVehicle)){
       someoneOnLeft=true;
-      System.out.println("left");
+      // System.out.println("left");
     }
     if(areTheyOnTheRight(outsideVehicle)){
       someoneOnRight=true;
-      System.out.println("right");
+      // System.out.println("right");
     }
     // if(areWeColliding(outsideVehicle)){
       // nextX=x;
@@ -106,12 +105,12 @@ class Vehicle{
   //uodates our collision boxes1
   private void updateBoundryBoxes(){
 
+
+    //=real
     frontBox.y=y+height/2-175/2;
     frontBox.x=x+width;
     frontBox.w=225;
     frontBox.h=175;
-
-
 
     leftBox.y=(int)(y+height/2-175*1.5);
     leftBox.x=x+width/2-300;
@@ -122,6 +121,7 @@ class Vehicle{
     rightBox.x=x+width/2-300;
     rightBox.w=200*3;
     rightBox.h=175;
+
   
   }
 
@@ -217,128 +217,131 @@ class Vehicle{
   
   }
 
+  //is box colliding with a vehicle
+  private boolean isBoxColliding(Box box, Vehicle vehicle){
+
+    if(box.x<=vehicle.getX()+vehicle.getWidth()){
+      if(vehicle.getX()<=box.x+box.w){
+        if(box.y<=vehicle.getY()+vehicle.getHeight()){
+          if(vehicle.getY()<=box.y+box.h){
+            return true;
+          }
+        }
+      }
+    }
+
+    return false;
+  
+  }
+
+
   //tells us if the vehicle is in front of us
-  private boolean areTheyInFront(Vehicle vehicle1){
+  private boolean areTheyInFront(Vehicle vehicle){
   
-    Vehicle vehicle2=this;
-  
-    //why are we checking if we are colliding with ourselves?
-    if(vehicle1==vehicle2){
+    //why are we checking if we are colliding with ourselves right?
+    if(this==vehicle){
       return false;
     }
 
+    int collisions=0;
 
+    //=check real
+    collisions+=isBoxColliding(frontBox, vehicle)? 1 :0;
+
+    //=check ghosts
+    frontBox.x-=1300;
+    collisions+=isBoxColliding(frontBox, vehicle)? 1 :0;
+    frontBox.x+=1300*2;
+    collisions+=isBoxColliding(frontBox, vehicle)? 1 :0;
+    frontBox.x-=1300;
     
-
-    //check if the real vehicle is in front of us
-    if (vehicle2.getX()+vehicle2.getWidth()/2 <= vehicle1.getX()+vehicle1.getWidth()){
-      if (vehicle1.getX() <= vehicle2.getX()+vehicle2.getWidth()*1.5){
-        if (vehicle2.getY() <= vehicle1.getY()+vehicle1.getHeight()){
-          if (vehicle1.getY() <= vehicle2.getY()+vehicle2.getHeight()){
-            return true;
-          }
-        }
-      }
-    }
-
-
-    //check if a theoretical vehicle is in front of us in the case the vehicle wraps back to the begining 
-    if (vehicle2.getX()+vehicle2.getWidth()/2 <= vehicle1.getX() + vehicle1.getWidth()+1300) {
-      if (vehicle1.getX()+1300 <= vehicle2.getX() + vehicle2.getWidth()*1.5) {
-        if (vehicle2.getY() <= vehicle1.getY() + vehicle1.getHeight()) {
-          if (vehicle1.getY() <= vehicle2.getY() + vehicle2.getHeight()) {
-            return true;
-          }
-        }
-      }
-    }
-
-
+    return collisions>0? true : false;
   
-    return false;
   }
 
   //tells us if the vehicle is left of us
-  private boolean areTheyOnTheLeft(Vehicle vehicle1){
+  private boolean areTheyOnTheLeft(Vehicle vehicle){
 
     //we are at the edge;
     if(y<100){
       return true;
     }
   
-    Vehicle vehicle2=this;
-    if(vehicle1==vehicle2){
+    //why are we checking if we are colliding with ourselves right?
+    if(this==vehicle){
       return false;
     }
     
-    //check if the real vehicle is left of us
-    if (vehicle2.getX() <= vehicle1.getX() + vehicle1.getWidth()) {
-      if (vehicle1.getX() <= vehicle2.getX() + vehicle2.getWidth()) {
-        if (vehicle2.getY() + vehicle2.getHeight()<= vehicle1.getY() + vehicle1.getHeight()) {
-          if (vehicle1.getY() <= vehicle2.getY() + vehicle2.getHeight()*2) {
-            return true;
-          }
-        }
-      }
-    }
+    int collisions=0;
+
+    //=check real
+    collisions+=isBoxColliding(leftBox, vehicle)? 1 :0;
+
+    //=check ghosts
+    leftBox.x-=1300;
+    collisions+=isBoxColliding(leftBox, vehicle)? 1 :0;
+    leftBox.x+=1300*2;
+    collisions+=isBoxColliding(leftBox, vehicle)? 1 :0;
+    leftBox.x-=1300;
+    
+    return collisions>0? true : false;
   
-    //check if a theoretical vehicle is left of us in the case the vehicle wraps back to the begining 
-    if (vehicle2.getX() <= vehicle1.getX() + vehicle1.getWidth()+1300) {
-      if (vehicle1.getX()+1300 <= vehicle2.getX() + vehicle2.getWidth()) {
-        if (vehicle2.getY() + vehicle2.getHeight()<= vehicle1.getY() + vehicle1.getHeight()) {
-          if (vehicle1.getY() <= vehicle2.getY() + vehicle2.getHeight()*2) {
-            return true;
-          }
-        }
-      }
-    }
-  
-    return false;
   }
 
   
   //tells us if the vehicle is right of us
-  private boolean areTheyOnTheRight(Vehicle vehicle1){
+  private boolean areTheyOnTheRight(Vehicle vehicle){
     
     //we are at the edge;
     if(y>550){
       return true;
     }
     
-    Vehicle vehicle2=this;
-    if(vehicle1==vehicle2){
+    //why are we checking if we are colliding with ourselves right?
+    if(this==vehicle){
       return false;
     }
+
+    int collisions=0;
+
+    //=check real
+    collisions+=isBoxColliding(rightBox, vehicle)? 1 :0;
+
+    //=check ghosts
+    rightBox.x-=1300;
+    collisions+=isBoxColliding(rightBox, vehicle)? 1 :0;
+    rightBox.x+=1300*2;
+    collisions+=isBoxColliding(rightBox, vehicle)? 1 :0;
+    rightBox.x-=1300;
     
-    //check if the real vehicle is right of us
-    if (vehicle2.getX() <= vehicle1.getX() + vehicle1.getWidth()) {
-      if (vehicle1.getX() <= vehicle2.getX() + vehicle2.getWidth()) {
-        if (vehicle2.getY() - vehicle2.getHeight()<= vehicle1.getY() + vehicle1.getHeight()) {
-          if (vehicle1.getY() <= vehicle2.getY()) {
-            return true;
-          }
-        }
-      }
-    }
-  
-    //check if a theoretical vehicle is right of us in the case the vehicle wraps back to the begining 
-    if (vehicle2.getX() <= vehicle1.getX() + vehicle1.getWidth()+1300) {
-      if (vehicle1.getX()+1300 <= vehicle2.getX() + vehicle2.getWidth()) {
-        if (vehicle2.getY() - vehicle2.getHeight()<= vehicle1.getY() + vehicle1.getHeight()) {
-          if (vehicle1.getY() <= vehicle2.getY()) {
-            return true;
-          }
-        }
-      }
-    }
-  
-    return false;
+    return collisions>0? true : false;
+
   }
 
   public void draw(Graphics g){
     frontBox.draw(g);
     leftBox.draw(g);
     rightBox.draw(g);
+
+    frontBox.x-=1300;
+    leftBox.x-=1300;
+    rightBox.x-=1300;
+
+    frontBox.draw(g);
+    leftBox.draw(g);
+    rightBox.draw(g);
+
+    frontBox.x+=1300*2;
+    leftBox.x+=1300*2;
+    rightBox.x+=1300*2;
+
+    frontBox.draw(g);
+    leftBox.draw(g);
+    rightBox.draw(g);
+
+    frontBox.x-=1300;
+    leftBox.x-=1300;
+    rightBox.x-=1300;
     
   }
 

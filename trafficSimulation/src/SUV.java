@@ -22,6 +22,7 @@ class SUV extends Vehicle{
   }
   
   public void draw(Graphics g){
+    super.draw(g);
     g.setColor(Color.MAGENTA);
     g.fillRect(x, y, width, height);
   }
