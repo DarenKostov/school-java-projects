@@ -8,6 +8,7 @@
 */
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.awt.Container;
 
@@ -24,10 +25,11 @@ class Traffic implements ActionListener, Runnable{
     Road road=new Road();
 
 
-    //sim controls
+    //sim controls/stats
     JButton start= new JButton("start");
     JButton stop= new JButton("stop");
-
+    JLabel throughputLabel=  new JLabel("Throughput: 0"); 
+    
 
     //add car buttons
     JButton[] addSemi= new JButton[4];
@@ -40,8 +42,11 @@ class Traffic implements ActionListener, Runnable{
     Container controls= new Container();
     Container addCars= new Container();
 
-    boolean running=false;
 
+    
+    boolean running=false;
+    int carCount=0;
+    long time=0;
         
     public Traffic(){
         frame.setSize(1300, 740);
@@ -51,11 +56,12 @@ class Traffic implements ActionListener, Runnable{
         frame.add(road, BorderLayout.CENTER);
 
 
-        controls.setLayout(new GridLayout(1, 2));
+        controls.setLayout(new GridLayout(1, 3));
         controls.add(start);
         start.addActionListener(this);
         controls.add(stop);
         stop.addActionListener(this);
+        controls.add(throughputLabel);
         frame.add(controls, BorderLayout.SOUTH);
 
 
@@ -96,6 +102,9 @@ class Traffic implements ActionListener, Runnable{
             if(running) return;
 
             running=true;
+            carCount=road.getCarCount();
+            time=System.currentTimeMillis();
+            
             Thread t=new Thread(this);
             t.start();        
         }
@@ -151,6 +160,11 @@ class Traffic implements ActionListener, Runnable{
     public void run() {
         while(running){
             road.update();
+
+            carCount+=road.getCarCount();
+            double throughput=1000*carCount/(double)(System.currentTimeMillis()-time);
+            throughputLabel.setText("Throughput: "+throughput);
+            
             frame.repaint();
             try{
                 Thread.sleep(10);

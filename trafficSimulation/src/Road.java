@@ -18,7 +18,7 @@ class Road extends JPanel{
 
   ConcurrentLinkedQueue<Vehicle> cars= new ConcurrentLinkedQueue<Vehicle>();
 
-
+  int carCount=0;
 
   
   public Road(){
@@ -65,8 +65,22 @@ class Road extends JPanel{
         cars.remove(car);
     }
     
+    //how many cars wrapped around?
+    for(Vehicle car : cars){
+      if(car.getX()==0){
+        carCount++;
+      }
+    }
+    
   }
+
+  public int getCarCount(){
+    int tmp=carCount;
+    carCount=0;
   
+    return tmp;
+  
+  }
 
   public void paintComponent(Graphics g){
     super.paintComponent(g);
