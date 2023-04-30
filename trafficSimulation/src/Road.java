@@ -58,6 +58,12 @@ class Road extends JPanel{
       car.update();
     }
     
+    //remove vehicles that are too small
+    for(Vehicle car : cars){
+      if(car.getWidth()<10)
+        cars.remove(car);
+    }
+    
   }
   
 

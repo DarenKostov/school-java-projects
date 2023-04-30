@@ -63,6 +63,15 @@ class Vehicle{
   }  
 
 
+  //setters
+  public void setX(int in){
+    x=in;
+    nextX=in;
+  }
+  public void setWidth(int in){
+    width=in;
+  }
+
   //calculates where the vehicle will be in the next step depending on its enviroment (vehicles around it)
   public void calculateFuture(Vehicle outsideVehicle){
 
@@ -92,18 +101,13 @@ class Vehicle{
       someoneOnRight=true;
       // System.out.println("right");
     }
-    // if(areWeColliding(outsideVehicle)){
-      // nextX=x;
-      // nextY=y;
-      // dx=0;
-      // dy=5;
 
   
   }
 
 
   //uodates our collision boxes1
-  private void updateBoundryBoxes(){
+  protected void updateBoundryBoxes(){
 
 
     //=real
@@ -127,7 +131,7 @@ class Vehicle{
 
   
   //updates delta values
-  private void updateDeltas(){
+  protected void updateDeltas(){
   
     if(someoneAtFront){
       if(someoneOnLeft){ //L, ?
@@ -198,7 +202,7 @@ class Vehicle{
       //get our lane
       int lane=(int)Math.floor(y/175);
 
-      System.out.println(lane);
+      // System.out.println(lane);
       
       //get target y coordinate
       int target=lane*175+175/2;
@@ -247,7 +251,7 @@ class Vehicle{
   }
 
   //is box colliding with a vehicle
-  private boolean isBoxColliding(Box box, Vehicle vehicle){
+  protected boolean isBoxColliding(Box box, Vehicle vehicle){
 
     if(box.x<=vehicle.getX()+vehicle.getWidth()){
       if(vehicle.getX()<=box.x+box.w){
@@ -265,7 +269,7 @@ class Vehicle{
 
 
   //tells us if the vehicle is in front of us
-  public boolean areTheyInFront(Vehicle vehicle){
+  protected boolean areTheyInFront(Vehicle vehicle){
   
     //why are we checking if we are colliding with ourselves right?
     if(this==vehicle){
@@ -289,7 +293,7 @@ class Vehicle{
   }
 
   //tells us if the vehicle is left of us
-  private boolean areTheyOnTheLeft(Vehicle vehicle){
+  protected boolean areTheyOnTheLeft(Vehicle vehicle){
 
     //we are at the edge;
     if(y<100){
@@ -319,7 +323,7 @@ class Vehicle{
 
   
   //tells us if the vehicle is right of us
-  private boolean areTheyOnTheRight(Vehicle vehicle){
+  protected boolean areTheyOnTheRight(Vehicle vehicle){
     
     //we are at the edge;
     if(y>550){
@@ -374,7 +378,12 @@ class Vehicle{
     
   }
 
-  private class Box{
+
+  public boolean amIaTank(){
+    return false;
+  }
+
+  protected class Box{
 
     public int x;
     public int y;
