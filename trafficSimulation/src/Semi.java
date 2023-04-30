@@ -16,11 +16,13 @@ class Semi extends Vehicle{
     width=120;
     height=40;
 
-    maxSpeed=50;
+    maxSpeed=10;
     accelaration=0.1f;
+
   }
   
   public void draw(Graphics g){
+    super.draw(g);
     g.setColor(Color.ORANGE);
     g.fillRect(x, y, width, height);
   }
