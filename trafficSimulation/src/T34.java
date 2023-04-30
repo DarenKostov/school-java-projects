@@ -48,8 +48,9 @@ class T34 extends Vehicle{
     }  
 
 
-    //we will only move to the side if there is a tank
-    if(outsideVehicle.amIaTank()){
+    //we will only move to the side if there is a tank that is not significaly slower than us
+    if(outsideVehicle.amIaTank() && outsideVehicle.getSpeed()>dx/2){
+    
       if(areTheyInFront(outsideVehicle)){
         someoneAtFront=true;
       }
@@ -60,6 +61,7 @@ class T34 extends Vehicle{
         someoneOnRight=true;
       }
     }else{
+    
       if(areWeColliding(outsideVehicle)){
         carsInFrontOfUs.add(outsideVehicle);
       }

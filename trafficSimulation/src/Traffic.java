@@ -147,7 +147,7 @@ class Traffic implements ActionListener, Runnable{
         //are we adding a T34?
         for(int i=0; i<4; i++){
             if(event.getSource().equals(addT34[i])){
-                Vehicle car=new T34(200, 175*i+70);
+                Vehicle car=new T34(200, 175*i+10);
                 road.add(car);
                 frame.repaint();
             }

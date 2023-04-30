@@ -64,6 +64,9 @@ class Vehicle{
   public int getHeight(){
     return height;
   }  
+  public float getSpeed(){
+    return dx;
+  }  
 
 
   //setters
@@ -116,7 +119,7 @@ class Vehicle{
     //=real
     frontBox.y=y+height/2-175/2;
     frontBox.x=x+width;
-    frontBox.w=225;
+    frontBox.w=225/2;
     frontBox.h=175;
 
     leftBox.y=(int)(y+height/2-175*1.5);
@@ -191,10 +194,10 @@ class Vehicle{
 
 
     //dont go off the screen
-    if(y<10){
-      y=10;
-    }else if(y>690-width){
-      y=690-width;
+    if(y<0){
+      y=0;
+    }else if(y>720-width){
+      y=720-width;
     }
     
 
@@ -203,17 +206,15 @@ class Vehicle{
     if(dy<0.1 && dy>-0.1){
 
       //get our lane
-      int lane=(int)Math.floor(y/175);
+      int lane=(int)Math.floor(y/175.0);
 
-      // System.out.println(lane);
       
       //get target y coordinate
       int target=lane*175+175/2;
 
-      target-=width/3;
-      
-      y=target;
+      target-=height/2;
 
+      dy=(target-y)/10;
 
       
     }
@@ -329,7 +330,7 @@ class Vehicle{
   protected boolean areTheyOnTheRight(Vehicle vehicle){
     
     //we are at the edge;
-    if(y>550){
+    if(y>520){
       return true;
     }
     
