@@ -3,9 +3,12 @@
   Daren Kostov
 
   a T34 tank class, like vehicle but more specific
+  
   It should be noted that this vehicle can and most likely
   will become extremly fast 
 
+  also this vehicle doesn't care about collisions and might skip 2 lanes at once, or move lanes on their own for some reason
+  
 */
 import java.awt.Graphics;
 import java.util.*;

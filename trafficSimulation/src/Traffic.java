@@ -47,7 +47,10 @@ class Traffic implements ActionListener, Runnable{
     boolean running=false;
     int carCount=0;
     long time=0;
-        
+
+    double throughput=0;
+    double lastThroughput=0;
+    
     public Traffic(){
         frame.setSize(1300, 740);
         frame.setResizable(false);
@@ -161,11 +164,22 @@ class Traffic implements ActionListener, Runnable{
         while(running){
             road.update();
 
+            //reset every 5 sec
+            if(System.currentTimeMillis()-time>5000){
+                lastThroughput=throughput;
+                carCount=road.getCarCount();
+                time=System.currentTimeMillis();
+            }
+
             carCount+=road.getCarCount();
-            double throughput=1000*carCount/(double)(System.currentTimeMillis()-time);
+
+            //the throughput is less and less relavant the longer ago it was measured
+            throughput=(lastThroughput+(1000*carCount/(double)(System.currentTimeMillis()-time)))/2;
             throughputLabel.setText("Throughput: "+throughput);
+
             
             frame.repaint();
+
             try{
                 Thread.sleep(10);
             }catch(Exception e){
