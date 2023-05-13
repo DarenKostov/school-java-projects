@@ -1,6 +1,10 @@
 /*
     Daren Kostov
 
+    Graph creator!
+    this should work very similarly (code wise) to sgdt which is at
+    https://github.com/DarenKostov/sgdt
+    
 */
 
 import javax.swing.JFrame;
@@ -31,6 +35,7 @@ class GraphCreator implements ActionListener, MouseListener{
     Container west= new Container();
 
 
+
     public GraphCreator(){
         frame.setSize(600, 400);
         frame.setResizable(false);
@@ -45,9 +50,8 @@ class GraphCreator implements ActionListener, MouseListener{
         edgeB.addActionListener(this);
         west.add(labelsTF);
         labelsTF.addActionListener(this);
-
         frame.add(west, BorderLayout.WEST);
-
+        panel.addMouseListener(this);
 
 
 
@@ -74,7 +78,7 @@ class GraphCreator implements ActionListener, MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent event){
-
+        
     }
 
     @Override
@@ -89,7 +93,9 @@ class GraphCreator implements ActionListener, MouseListener{
 
     @Override
     public void mousePressed(MouseEvent event){
-
+        System.out.println(event.getX()+", "+event.getY());
+        panel.addNode(event.getX(), event.getY(), "aa");
+        frame.repaint();
     }
 
     @Override
