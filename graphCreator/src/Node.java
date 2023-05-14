@@ -18,10 +18,18 @@ class Node{
         this.label=label;    
     }
 
+    //getters
+    public int getX(){
+        return x;
+    }
+    public int getY(){
+        return y;
+    }
+
 
     //tells you if a point is within the node
     public boolean withinMe(int x, int y){
-        if(Math.sqrt(Math.pow(x-this.x, 2)+Math.pow(y-this.y, 1))<40){
+        if(Math.sqrt(Math.pow(x-this.x, 2)+Math.pow(y-this.y, 2))<20){
             return true;
         }
         return false;

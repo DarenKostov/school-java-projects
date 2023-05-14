@@ -34,7 +34,9 @@ class GraphCreator implements ActionListener, MouseListener{
     JTextField labelsTF= new JTextField();
     Container west= new Container();
 
-
+    boolean addingEdge=false;
+    int previousX=10000;
+    int previousY=10000;
 
     public GraphCreator(){
         frame.setSize(600, 400);
@@ -93,14 +95,29 @@ class GraphCreator implements ActionListener, MouseListener{
 
     @Override
     public void mousePressed(MouseEvent event){
-        System.out.println(event.getX()+", "+event.getY());
-        panel.addNode(event.getX(), event.getY(), "aa");
+
+        //if we clicked on a node we are adding edge, if not, we are adding node
+        if(panel.SelectNode(event.getX(), event.getY())){
+            addingEdge=true;
+            previousX=event.getX();
+            previousY=event.getY();
+            System.out.println("edge");
+        }else{
+            addingEdge=false;
+            panel.addNode(event.getX(), event.getY(), "aa");
+            System.out.println("node");
+        }
         frame.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent event){
-
+        if(addingEdge==true){
+            panel.addLink(event.getX(), event.getY(), previousX, previousY, 5);
+            addingEdge=false;
+            panel.SelectNode(10000, 10000);
+            frame.repaint();
+        }
     }
 
 
