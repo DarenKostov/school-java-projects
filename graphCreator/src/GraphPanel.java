@@ -14,8 +14,10 @@ import java.awt.Color;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.HashMap;
 
 class GraphPanel extends JPanel{
 
@@ -123,26 +125,119 @@ class GraphPanel extends JPanel{
 
     public String calcShortestDistance(int x1, int y1, int x2, int y2){
         
-        Node node1=returnNodeAtCords(x1, y1);
-        Node node2=returnNodeAtCords(x2, y2);
+        Node node2=returnNodeAtCords(x1, y1);
+        Node node1=returnNodeAtCords(x2, y2);
 
+
+
+        System.out.println(node1.getLabel()+"--"+node2.getLabel());
+            
         //dont connect a node to itself or if either of the node are null
         if(node1==node2){
-            return "node cannot be the same";
+            return "node cannot be the same\nif you are connecting nodes, make sure nothing is selected";
         }
-        
         if(node1==null || node1==null){
-            return "one or both nodes don't exist";
+            return "one or both nodes don't exist\nHow did we get here?";
         }
 
-        if(areNodesConnected(node1, node2)){
-            return "nodes are connected";
-        }else{
+
+        //make sure the nodes are connected
+        if(!areNodesConnected(node1, node2)){
             return "nodes are not connected";
         }
+
+
+        String output="Optimal path:\n"+node1.getLabel();
+        Stack<Node> shortestPath=new Stack<Node>();
         
+        
+        int totalCost=findShortesPath(shortestPath, node1, node2);
+
+
+        //make the path
+        shortestPath.pop();
+        while(!shortestPath.empty()){
+            output+="->"+shortestPath.pop().getLabel();
+        }
+
+        output+="\nWith the cost of "+totalCost;
+        
+
+
+        
+        return output;
     }
 
+    //this uses Djikstra's Algorithm (from c++'s graphing assignment)
+    private int findShortesPath(Stack<Node> path, Node node1, Node node2){
+
+        List<Node> notVisited=new ArrayList<Node>();
+        HashMap<Node, Integer> shortestDistanceFromDestination=new HashMap<Node, Integer>();
+        HashMap<Node, Node> previousNode=new HashMap<Node, Node>();
+        
+
+        notVisited.addAll(nodes);
+
+
+        //set up
+        for(Node node : nodes){
+            notVisited.add(node);
+            shortestDistanceFromDestination.put(node, Integer.MAX_VALUE);
+            previousNode.put(node, null);
+        }
+        shortestDistanceFromDestination.put(node1, 0);
+
+
+
+        while(!notVisited.isEmpty()){
+
+            Node current=null;
+
+            //get the node with smallest distance
+            {
+                int val=Integer.MAX_VALUE;
+                for(Node node : notVisited){
+                    if(shortestDistanceFromDestination.get(node)<val){
+                        val=shortestDistanceFromDestination.get(node);
+                        current=node;
+                    }
+                }
+            }
+
+            //get all adjacent nodes
+            for(Node node : nodes){
+                if(links.get(current).get(node)==0)
+                    continue;
+
+
+                //if the previous path costed more, replace it with this (cheaper) path
+                int linkSum=links.get(current).get(node)+shortestDistanceFromDestination.get(current);
+                if(shortestDistanceFromDestination.get(node)>linkSum){
+                    previousNode.put(node, current);
+                    shortestDistanceFromDestination.put(node, linkSum);
+                }
+            }
+
+            //we just visited this node
+            notVisited.remove(current);
+        
+        }
+        
+
+        //store the shortest path
+        Node current=node2;
+        while(current!=null){
+            path.add(current);
+            current=previousNode.get(current);
+        }
+        
+
+        //return the cost of the shortest path
+        return shortestDistanceFromDestination.get(node2);
+
+
+
+    }
 
 
     private boolean areNodesConnected(Node node1, Node node2){

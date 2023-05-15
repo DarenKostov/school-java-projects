@@ -4,14 +4,34 @@
     Graph creator!
     this should work very similarly (code wise) to sgdt which is at
     https://github.com/DarenKostov/sgdt
+
+
+    no buttons for simpler UI
+    there is only a text box for the labels on the bottom
+
+    how to create a node/vertex:
+        click anywhere on the window
+        make sure nothing is selected and you have a label written
+
+    how to create a link/edge:
+        press on a node, it will light up red, drag the mouse to another node and release
+        make sutre you have an integer for a label and nothing is selected
+
+    how to check if 2 nodes/vertices:
+        click on a node, itll light up red, and then click on another node
+            itll either tell you the optimal path or that they are not connected
+    
+    how to calculate optimal path for 2 nodes/vertices:
+        same as how to check if they are connected
+
+
+    If you have something selected, you can click into nothingness to deselect it   
     
 */
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JButton;
 import java.awt.Container;
 
 import java.awt.BorderLayout;
@@ -24,7 +44,6 @@ import java.awt.event.MouseEvent;
 
 
 
-import java.util.*;
 
 class GraphCreator implements ActionListener, MouseListener{
 
@@ -66,25 +85,19 @@ class GraphCreator implements ActionListener, MouseListener{
     @Override
     public void actionPerformed(ActionEvent event){
     }
-
     @Override
     public void mouseClicked(MouseEvent event){
     }
-
     @Override
     public void mouseEntered(MouseEvent event){
-
     }
 
     @Override
     public void mouseExited(MouseEvent event){
-
     }
-
     @Override
     public void mousePressed(MouseEvent event){
 
-        //
 
         
         //if we clicked on a node we are selecting it, if not, we are adding node

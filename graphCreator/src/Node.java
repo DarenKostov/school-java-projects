@@ -25,6 +25,9 @@ class Node{
     public int getY(){
         return y;
     }
+    public String getLabel(){
+        return label;
+    }
 
 
     //tells you if a point is within the node
