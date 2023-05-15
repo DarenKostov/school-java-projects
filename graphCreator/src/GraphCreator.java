@@ -8,6 +8,7 @@
 */
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -29,12 +30,10 @@ class GraphCreator implements ActionListener, MouseListener{
 
     JFrame frame= new JFrame("Graph Creator!");
     GraphPanel panel= new GraphPanel();
-    JButton nodeB= new JButton("Node");
-    JButton edgeB= new JButton("Edge");
     JTextField labelsTF= new JTextField();
     Container west= new Container();
 
-    boolean addingEdge=false;
+    boolean haveSelected=false; //have we selected something
     int previousX=10000;
     int previousY=10000;
 
@@ -46,13 +45,8 @@ class GraphCreator implements ActionListener, MouseListener{
         frame.add(panel, BorderLayout.CENTER);
         west.setLayout(new GridLayout(3, 1));
         
-        west.add(nodeB);
-        nodeB.addActionListener(this);
-        west.add(edgeB);
-        edgeB.addActionListener(this);
-        west.add(labelsTF);
         labelsTF.addActionListener(this);
-        frame.add(west, BorderLayout.WEST);
+        frame.add(labelsTF, BorderLayout.SOUTH);
         panel.addMouseListener(this);
 
 
@@ -71,16 +65,10 @@ class GraphCreator implements ActionListener, MouseListener{
 
     @Override
     public void actionPerformed(ActionEvent event){
-        if(event.getSource().equals(nodeB)){
-            System.out.println("Node!");
-        }else if(event.getSource().equals(edgeB)){
-            System.out.println("Edge!");
-        }
     }
 
     @Override
     public void mouseClicked(MouseEvent event){
-        
     }
 
     @Override
@@ -96,28 +84,71 @@ class GraphCreator implements ActionListener, MouseListener{
     @Override
     public void mousePressed(MouseEvent event){
 
-        //if we clicked on a node we are adding edge, if not, we are adding node
-        if(panel.SelectNode(event.getX(), event.getY())){
-            addingEdge=true;
+        //
+
+        
+        //if we clicked on a node we are selecting it, if not, we are adding node
+        if(panel.selectNode(event.getX(), event.getY())){//selecting node
+
+            //have we previously selected a node? if so we are checking the most cost effective path
+            if(haveSelected){
+                String output=panel.calcShortestDistance(event.getX(), event.getY(), previousX, previousY);
+                JOptionPane.showMessageDialog(frame, output);
+                panel.selectNode(10000, 10000);
+                haveSelected=false;
+                frame.repaint();
+                return;
+            }
+        
+            haveSelected=true;
             previousX=event.getX();
             previousY=event.getY();
-            System.out.println("edge");
-        }else{
-            addingEdge=false;
-            panel.addNode(event.getX(), event.getY(), "aa");
-            System.out.println("node");
+        }else{//adding node
+
+            //we have selectd a node? desect it and exit
+            if(haveSelected){
+                haveSelected=false;
+                frame.repaint();
+                return;
+            }
+            
+            //make sure the node label is not empty
+            if("".equals(labelsTF.getText())){
+                JOptionPane.showMessageDialog(frame, "Node must have a label");
+                return;
+            }
+            panel.addNode(event.getX(), event.getY(), labelsTF.getText());
         }
         frame.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent event){
-        if(addingEdge==true){
-            panel.addLink(event.getX(), event.getY(), previousX, previousY, 5);
-            addingEdge=false;
-            panel.SelectNode(10000, 10000);
+        if(haveSelected==true){
+
+            //check if the connection is even possible
+            if(!panel.addLink(event.getX(), event.getY(), previousX, previousY, 0)){
+                return;
+            }
+
+            
+            int num=0;
+
+            //make sure we are adding the cost in integers
+            try{
+                num=Integer.parseInt(labelsTF.getText());
+            }catch(NumberFormatException ex){
+                JOptionPane.showMessageDialog(frame, "Edges can only be labeled as integers!");
+                return;
+            }
+            
+
+            panel.addLink(event.getX(), event.getY(), previousX, previousY, num);
+            haveSelected=false;
+            panel.selectNode(10000, 10000);
             frame.repaint();
         }
+        // haveSelected=false;
     }
 
 
