@@ -139,6 +139,8 @@ class GraphCreator implements ActionListener, MouseListener{
     public void mouseReleased(MouseEvent event){
         if(haveSelected==true){
 
+
+            
             //check if the connection is even possible
             if(!panel.addLink(event.getX(), event.getY(), previousX, previousY, 0)){
                 return;
@@ -152,6 +154,9 @@ class GraphCreator implements ActionListener, MouseListener{
                 num=Integer.parseInt(labelsTF.getText());
             }catch(NumberFormatException ex){
                 JOptionPane.showMessageDialog(frame, "Edges can only be labeled as integers!");
+                haveSelected=false;
+                panel.selectNode(10000, 10000);
+                frame.repaint();
                 return;
             }
             
